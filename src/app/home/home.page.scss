@@ -1,11 +1,19 @@
-#container {
-  text-align: center;
 
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+
+#container {
+  text-align: left;
+  font-size: 2em;
+  //position: absolute;
+  //left: 0;
+  //right: 0;
+  //top: 50%;
+  //transform: translateY(-50%);
+}
+
+section {
+  margin-left: 2em;
+  padding-top: 2em;
+  margin-right: 250px;
 }
 
 #container strong {
@@ -14,14 +22,45 @@
 }
 
 #container p {
-  font-size: 16px;
+  font-size: 3em;
   line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
 }
 
 #container a {
   text-decoration: none;
+}
+
+.page {
+  height: 100vh;
+}
+
+.floating-menu {
+  position:fixed;
+  border:none;
+  width:200px;
+  z-index:100;
+  top:15px;
+  right:10px;
+}
+
+ion-button	{
+  --padding-start: 0px;
+}
+
+ion-toggle	{
+  --padding-start: 0px;
+}
+
+ion-radio {
+  --color:transparent;
+  --color-checked: primary;
+  --width:0px
+}
+
+.radio-wrapper {
+  --color:primary;
+}
+
+.radio-checked {
+  color:#245633; // fixme use variable
 }
