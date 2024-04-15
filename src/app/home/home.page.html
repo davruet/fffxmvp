@@ -31,47 +31,36 @@
 </div>
 
 <ion-content class="ion-padding" [fullscreen]="true" id="container">
-  <section #section class="page">
+  
+  
+  <app-base-section #section [sectionID]="'start'">
     <ion-text color="primary">Hi.<br>
 And welcome.<br>
 I will help you create recipes that combine seasonal food forest ingredients with alternative protein products.<br>
 <br>
 Let’s get started.
     </ion-text>
-    <br>
-    <ion-button (click)="scrollToNextSection($event)" fill="clear">
-      <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
-    </ion-button>
-
-  </section>
+  </app-base-section>
   
-  <section *ngIf="visibleSectionIndex >= 1" #section class="page">
+  <app-base-section [sectionID]="'select-food-forest'" #select_food_forest>
     <ion-text color="primary">
       First, let’s select food forest ingredients near you!<br><br>
       Choose where you will get your ingredients from:<br>      
       <item-list [items]="foodForests"></item-list>
     </ion-text>
-    
-    <br>
-    <ion-button (click)="scrollToNextSection($event)" fill="clear">
-      <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
-    </ion-button>
-  </section>
+  </app-base-section>
  
-    <section *ngIf="visibleSectionIndex >= 2" #section class="page">
+    <app-base-section [sectionID]="'select-date'">
       <ion-text color="primary">
-      Now, to find out which ingredients are available,<br> let me know what date you would like to cook:<br>
+      Now, to find out which ingredients are available, let me know what date you would like to cook:<br>
 
     </ion-text>
-    <!--<ion-datetime [isDateEnabled]="isValidDate" yearValues="2024,2025" presentation="date" [preferWheel]="true"></ion-datetime>-->
+    <ion-datetime [isDateEnabled]="isValidDate" yearValues="2024,2025" presentation="date" [preferWheel]="true"></ion-datetime>
 
-    <ion-button (click)="scrollToNextSection($event)" fill="clear">
-      <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
-    </ion-button>
-    </section>
+    </app-base-section>
     
     
-    <section *ngIf="visibleSectionIndex >= 3"#section class="page">
+    <app-base-section [sectionID]="'select-ingredients'">
       <ion-text color="primary">
       Got it. Here is a list of food forest ingredients available that week.<br><br>
       Explore the ingredients and edit your list below.
@@ -79,14 +68,9 @@ Let’s get started.
     
     <image-accordion [items]="ingredients"></image-accordion>
 
+    </app-base-section>
     
-    <br>
-    <ion-button (click)="scrollToNextSection($event)" fill="clear">
-      <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
-    </ion-button>
-    </section>
-    
-    <section *ngIf="visibleSectionIndex >= 4" #section class="page">
+    <app-base-section [sectionID]="'customize-or-surprise'">
       <ion-text color="primary">
       Great!<br><br>
       Do you want to customise and shape your recipe further, or do you want to skip that step to generate a recipe now and be surprised?
@@ -96,14 +80,10 @@ Let’s get started.
       <ion-radio value="customize" labelPlacement="start">Customise</ion-radio> | 
       <ion-radio value="surprise" labelPlacement="start">Surprise Me!</ion-radio>
     </ion-radio-group>
-    <br>
-    <ion-button (click)="scrollToNextSection($event)" fill="clear">
-      <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
-    </ion-button>
+    </app-base-section>
     
-    </section>
-    
-    <section *ngIf="customizeOrSurprise === 'customize'" #section class="page">
+    <!--<section *ngIf="customizeOrSurprise === 'customize'" #section class="page">-->
+      <app-base-section [sectionID]="'eat-or-preserve'">
       <ion-text color="primary">
       Wonderful!<br>
       Now let’s shape your recipe.<br>
@@ -114,13 +94,11 @@ Let’s get started.
         <ion-radio value="eat" labelPlacement="start">Eat</ion-radio> | 
         <ion-radio value="preserve" labelPlacement="start">Preserve</ion-radio>
       </ion-radio-group>
-      <br>
-      <ion-button (click)="scrollToNextSection($event)" fill="clear">
-        <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
-      </ion-button>
-    </section>
+
+      </app-base-section>
     
-    <section *ngIf="customizeOrSurprise === 'customize' && eatOrPreserve === 'eat'" #section class="page">
+    <!--<section *ngIf="customizeOrSurprise === 'customize' && eatOrPreserve === 'eat'" #section class="page">-->
+      <app-base-section [sectionID]="'specify-protein'">
       <ion-text color="primary">
         Fantastic!
         Before you customise your recipe, do you want to select a specific alternative protein product?
@@ -130,66 +108,46 @@ Let’s get started.
         <ion-radio value="noThanks" labelPlacement="start">No Thanks</ion-radio> | 
         <ion-radio value="selectProtein" labelPlacement="start">Select Protein</ion-radio>
       </ion-radio-group>
-      <br>
-      <ion-button (click)="scrollToNextSection($event)" fill="clear">
-        <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
-      </ion-button>
-    </section>
+      </app-base-section>
     
-    <section *ngIf="customizeOrSurprise === 'customize' && eatOrPreserve === 'eat' && protein === 'noThanks'" #section class="page">
+    <!--<section *ngIf="customizeOrSurprise === 'customize' && eatOrPreserve === 'eat' && protein === 'noThanks'" #section class="page">-->
+      <app-base-section [sectionID]="'no-specific-protein'">
       <ion-text color="primary">
         No problem.
         Using the food forest ingredients, let’s generate a delicious recipe for you to cook. Help fill out the following text to create your recipe:
     </ion-text>
-      <br>
+  </app-base-section>
     
-      <ion-button (click)="scrollToNextSection($event)" fill="clear">
-        <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
-      </ion-button>
-    </section>
-    
-    <section *ngIf="customizeOrSurprise === 'customize' && eatOrPreserve === 'eat' && protein === 'selectProtein'" #section class="page">
+    <!--<section *ngIf="customizeOrSurprise === 'customize' && eatOrPreserve === 'eat' && protein === 'selectProtein'" #section class="page">-->
+      <app-base-section>
       <ion-text color="primary">
         Splendid.
         Using the food forest ingredients plus an alternative protein of your choice, let’s generate a delicious recipe for you to cook. Help fill out the following text to create your recipe:
 
-    </ion-text>
-      <br>
-    
-      <ion-button (click)="scrollToNextSection($event)" fill="clear">
-        <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
-      </ion-button>
-    </section>
+      </ion-text>    
+      </app-base-section>
     
     
-    <section *ngIf="customizeOrSurprise === 'customize' && eatOrPreserve == 'preserve'" #section class="page">
+    <!--<section *ngIf="customizeOrSurprise === 'customize' && eatOrPreserve == 'preserve'" #section class="page">-->
+      <app-base-section>
       <ion-text color="primary">
         Perfect.
         Using the food forest ingredients, let’s generate a delicious recipe that can be eaten later. Help fill out the following text to create your recipe:
     </ion-text>
-      <br>
-      
-      <br>
-      <ion-button (click)="scrollToNextSection($event)" fill="clear">
-        <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
-      </ion-button>
-    </section>
+      </app-base-section>
     
     <!-- Surprise me path-->
-    <section *ngIf="customizeOrSurprise === 'surprise'" #section class="page">
+    <app-base-section>
+    <!--<section *ngIf="customizeOrSurprise === 'surprise'" #section class="page">-->
       <ion-text color="primary">
         Fun!
         Using your food forest ingredients list, let’s generate a delicious recipe for you to cook.
     </ion-text>
-      
-      <br>
-      <ion-button (click)="scrollToNextSection($event)" fill="clear">
-        <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
-      </ion-button>
-    </section>
+
+    </app-base-section>
     
     <!--  FIXME don't allow scrolling to this unless other items have been checked.-->
-    <section  #section class="page" >
+    <app-base-section>
       <ion-text color="primary">       
         DISCLAIMER
         This is a thinking and tinkering tool. The following recipe is a lucid hallucination generated by AI and cannot be held accountable for bad taste, being nutritionally deficient, or even poisonous. It is your responsibility to create a safe and delicious recipe in the kitchen.
@@ -204,7 +162,7 @@ Let’s get started.
       <ion-button (click)="scrollToNextSection($event)" fill="clear">
         <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
       </ion-button>
-    </section>
+    </app-base-section>
 
     
     
