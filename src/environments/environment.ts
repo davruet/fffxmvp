@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   dataUrl: 'http://localhost:8080/parameters',
-  generateUrl: 'http://localhost:8080/generate'
+  generateUrl: 'http://localhost:8080/generate',
+  imageUrl:'http://localhost:8080/generateImage'
 };
 
 /*

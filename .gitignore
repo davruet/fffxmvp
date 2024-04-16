@@ -79,3 +79,6 @@ credentials-desktop.json
 *.pdf
 
 *.pyc
+
+#Credentials
+crafty-almanac-420514-ee7c27c499af.json
