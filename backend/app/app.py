@@ -3,6 +3,8 @@ from openai import OpenAI
 import os
 import extract
 from flask_cors import CORS
+import yaml
+from string import Template
 
 
 app = Flask(__name__)
@@ -10,23 +12,34 @@ CORS(app)
 
 spreadsheet_id = '1kLVqLL64OQNjpYVZQokzUlawOFHI2g19KMSHPbVLrgU' # FIXME parameterize me
 
+with open('./prompts.yml', 'r') as prompts:
+	prompt_config = yaml.safe_load(prompts)
+
 @app.route('/generate', methods=['POST'])
 def generate_text():
 	if not request.is_json:
 		return jsonify({"error": "Request must be JSON"}), 400
 
-	content = request.get_json()
-	
-	client = OpenAI(
-		# This is the default and can be omitted
-		api_key=os.environ.get("OPENAI_API_KEY"),
-	)
 	try:
+		requestArg = request.get_json()
+		type = requestArg['type']
+		prompt = prompt_config[type]
+		promptTemplate = Template(prompt)
+		filledPrompt = promptTemplate.substitute(requestArg) # fill in the template
+		
+		if not prompt:
+			return jsonify({"error": "Prompt not found."}), 500
+		
+		client = OpenAI(
+			# This is the default and can be omitted
+			api_key=os.environ.get("OPENAI_API_KEY"),
+		)
+		
 		chat_completion = client.chat.completions.create(
 			messages=[
 				{
 					"role": "user",
-					"content": content.get('prompt', ''),
+					"content": filledPrompt,
 				}
 			],
 			model="gpt-3.5-turbo",

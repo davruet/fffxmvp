@@ -37,16 +37,17 @@ ion-toggle	{
   --padding-start: 0px;
 }
 
-ion-radio {
-  --color:transparent;
-  --color-checked: primary;
-  --width:0px
-}
-
 .radio-wrapper {
   --color:primary;
 }
 
 .radio-checked {
   color:#245633; // fixme use variable
+}
+
+.recipe-text {
+  font-size: .9em;
+  white-space: pre-wrap; /* Ensures the text wraps if needed */
+  word-break: break-word; /* Prevents overflow by breaking long words */
+  font-family: serif;
 }

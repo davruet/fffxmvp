@@ -1,10 +1,10 @@
 <ion-accordion-group>
   <ion-accordion *ngFor="let item of items" value="{{ item.id }}">
     <ion-item slot="header" color="light">
-      <ion-toggle [(ngModel)]="item.enabled" (ionChange)="toggleItemEnabled(item, $event)"></ion-toggle>
+      <ion-toggle [(ngModel)]="item.enabled" (ngModelChange)="onToggleChange(item)"></ion-toggle>
       <ion-label color="primary">{{ item.name }}</ion-label>
 
     </ion-item>
-    <div class="ion-padding" slot="content">First Content</div>
+    <div class="ion-padding" slot="content">{{ item.description }}</div>
   </ion-accordion>
 </ion-accordion-group>  

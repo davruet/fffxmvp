@@ -1,0 +1,21 @@
+surprise-me: |
+  Can you make a delicious recipe that is a nutritionally complete meal, with the recommended amount of calories, macronutrients, vitamins and micronutrients that serves four people?
+  
+  The recipe should be made with these food forest ingredients: $ingredients and $mvp.
+  
+  It should be in the culinary style of $style and be $serving.
+
+  The recipe must be $directive
+
+  The recipe should be original and authentic. The format should be a hilarious and sarcastic recipe title first, followed by the recipe ingredient list with quantities and instructions written in clear direct language, followed by the prep and cooking time, amount of servings, and the nutritional information, followed by a reminder of the alternative protein that you chose, written in this format: "Your MVP ingredients: [insert names of selected proteins]", followed by a reminder of the food forest ingredients in this format: "Your FFF ingredients: $ingredients". Finally, please provide 1 - 3 links to recipes published online that are closest to the recipe you suggest.
+preserved: |
+  Can you make a delicious recipe for a preserved food product with the ingredients below?
+  
+  ${FFF-DIETARY-RESTRICTIONS}
+  
+  The recipe should be made with these food forest ingredients: ${FFF-INGREDIENTS} and be in the form a preserved food item that can be made at home and last many months. It can be stored either in the refrigerator or in room temperature conditions.
+  
+  The preserved product should taste ${FFF-TASTE} and be ${FFF-TEXTURE} in texture. The recipe should be at the level of ${FFF-LEVEL} and should be ready to eat after a ${FFF-FERMENT-TIME}.
+  
+  The recipe should be original and authentic. The format should be a hilarious and sarcastic recipe title first, followed by the recipe ingredient list with quantities and instructions written in clear direct language, followed by the prep and cooking time, amount of servings, and the nutritional information, followed by a reminder of the food forest ingredients in this format: "Your FFF ingredients: [insert names of food forest ingredients]". Finally, please provide 1 - 3 links to recipes published online that are closest to the recipe you suggest.
+

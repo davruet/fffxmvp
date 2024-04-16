@@ -6,20 +6,7 @@ import { environment } from '../../environments/environment'; // Import environm
 import { SectionVisibilityStateMachine } from './section-visibility-state-machine';
 import { SectionComponent } from '../sections/section.component';
 import { SectionService } from '../sections/section.service';
-
-
-interface FoodForest {
-  id: number;
-  name: string;
-  enabled: boolean;
-}
-
-interface Ingredient {
-  id: number;
-  name: string;
-  enabled: boolean; // rename to selected
-  available: boolean;
-}
+import { SurpriseRecipe, PreservedRecipe, FreshByTypology, FreshByProduct, BasicRecipe, IngredientList, Ingredient, FoodForest, MVP } from '../recipe.interfaces';
 
 
 @Component({
@@ -42,8 +29,6 @@ export class HomePage implements AfterViewInit, OnInit {
 
   }
   
-
-  
   ngOnInit() {
     this.http.get(environment.dataUrl).subscribe({
       next: jsonData => {
@@ -65,11 +50,13 @@ export class HomePage implements AfterViewInit, OnInit {
 
   }
   
-  handleFFChange(updatedItems: any){
+  handleFFChange(updatedItems: any[]){
     console.log(`changes ${updatedItems}`); // FIXME THIS IS NOT WORKING
     console.log("food forests change!");
     let validForests = this.foodForests.filter(f=>f.enabled).map(f=>f.name);
     console.log(validForests);
+    
+    // Update available ingredients in list.
     this.ingredients = this.parameters["Food Forest Ingredient"]
       .filter((i:any)=>validForests.includes(i["FOOD FOREST"]))
       .map((item:any, index: number) => {
@@ -77,24 +64,59 @@ export class HomePage implements AfterViewInit, OnInit {
         id: index + 1, // Assuming ID starts from 1 and increments
         name: item["ABREVIATION (20-25 ch)"], 
         enabled: false,
+        description: item["20-40 WORDS"]
         //available: index < 5 // FIXME
       }});
       console.log(this.ingredients);
       //this.ingredients.splice(5);
-    
+      
+      // Ingredients may have changed (no longer available)
+      this.handleIngredientsChange(this.ingredients);
   }
   
+  handleIngredientsChange(updatedItems: any){
+    const filteredIngredients = (updatedItems as Ingredient[]).filter(i=>i.enabled);
+    const ingredientStrings = filteredIngredients.map(i=>i.name);
+    this.recipePrompt.ingredients = ingredientStrings;
+    console.log(`ingredients change ${filteredIngredients}`);
+  }
+  
+randomizeSurprise(){
+  if (this.recipePrompt.type === 'surprise-me'){
+    const surprise = this.recipePrompt as SurpriseRecipe;
+    surprise.mvp = this.randomMVP().abbreviation;
+    surprise.serving = "family style and be eaten communally";
+    surprise.style = "a Northern European recipe that was cooked before the Columbian Exchange"
+    surprise.directive = "be zero waste no matter how labor intensive that is";
+  }
+  
+}
+
+randomMVP(): MVP{
+  if (this.mvps.length === 0) {
+    throw new Error('The MVP array is empty.');
+  }
+  const randomIndex = Math.floor(Math.random() * this.mvps.length);
+  return this.mvps[randomIndex];
+}
   
 generateRecipe(){
   console.log("GENERATING");
-  let body = {prompt: "Write a poem called 'HELLO WORLD.'"};
+  if (this.recipePrompt.type === 'surprise-me'){
+    this.randomizeSurprise();
+  }
+  let body = JSON.stringify(this.recipePrompt);
+  console.log(body);
+  this.postRecipe(this.recipePrompt);
+}
+
+postRecipe(body:any){
   this.http.post(environment.generateUrl,
     body
   ).subscribe({
     next: jsonData => {
       console.log('JSON Data loaded', jsonData);
       this.recipe = jsonData;
-      ;
       this.scrollToSection(this.stateMachine.showNextSection('generating'));
     },
      complete: ()=>{
@@ -141,7 +163,7 @@ generateRecipe(){
       if (child){
         setTimeout(() => {
           child.getElementRef().nativeElement.scrollIntoView({ behavior: 'smooth' });
-        }, 500); // 1000 milliseconds = 1 second
+        }, 100); // 1000 milliseconds = 1 second
         
       }
 
@@ -179,6 +201,19 @@ generateRecipe(){
         name: item["NAME of FF (public)"], // Using the public name as 'name'
         enabled: true // Setting 'enabled' to true for all items
       }});
+    this.mvps = params["MVPs"].map((data:any, index:number) =>
+      ({
+        productName: data.PRODUCT_NAME,
+        companyName: data.COMPANY_NAME,
+        linkToInfo: data.LINK_TO_INFO,
+        mvpCategory: data.MVP_CATEGORY,
+        abbreviation: data.ABBREVIATION
+      })
+    );
+    //this.culinaryStyles = params["FRESH BY PRODUCT Prompts"]. // FIXME this should be extracted in the parameters mode.
+    //  .map((data:any, index:number) =>)
+    //this.servings = 
+    //this.directives = 
     this.handleFFChange(this.foodForests);
   }
   
@@ -189,16 +224,21 @@ generateRecipe(){
   ]*/
   foodForests: FoodForest[]= [];
   
+  mvps: MVP[] = [];
+  
   ingredients: Ingredient[] = [
-    { id: 1, name: 'Yarrow', enabled: true, available:true },
-    { id: 2, name: 'Sweet Chestnut', enabled: true , available:true },
-    { id: 3, name: 'Daylillies', enabled: true , available:true },
+    { id: 1, name: 'Yarrow', enabled: true, available:true, description:"" },
+    { id: 2, name: 'Sweet Chestnut', enabled: true , available:true, description:"" },
+    { id: 3, name: 'Daylillies', enabled: true , available:true , description:""},
   ]
   
-  customizeOrSurprise!: string;
-  eatOrPreserve!: string;
-  protein!: string;
-  proceed!: string;
+  recipePrompt: SurpriseRecipe | PreservedRecipe = {
+    type: 'surprise-me',
+    ingredients: [],
+    mvp: 'None',
+    style: 'None',
+    serving: 'home'
+  } as SurpriseRecipe;
   
   recipe!: Object;
 
