@@ -15,11 +15,11 @@ import { SectionObserver } from './section-observer.interface';
     ]),
   ],
   template: `
-  <section @fadeIn class="page" *ngIf="isSectionVisible()">
+  <section @fadeIn class="page" *ngIf="isVisible()">
 
-      <ng-content></ng-content> <!-- Place for subclass content -->
+      <ng-content select="[section-body]"></ng-content> <!-- Place for subclass content -->
       <br>
-      <ion-button (click)="showNextSection($event)" fill="clear">
+      <ion-button (click)="nextSection()" fill="clear">
         <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
       </ion-button>
   
@@ -31,36 +31,21 @@ styleUrls: ['section.component.scss'],
 
 export class SectionComponent implements OnInit {
   
-  @Input() sectionID!: string; // Assuming the sectionID is passed as an input for now
+  @Input() sectionID: string = "";
+  @Output() nextSectionEvent = new EventEmitter<string | null>();
 
-  private observers: Set<SectionObserver> = new Set<SectionObserver>();
-  
-  // Register an observer. Does not register an already-registered observer.
-  addObserver(observer: SectionObserver) {
-    this.observers.add(observer);
+
+  nextSection() {
+    const nextSectionId = this.stateMachine.showNextSection(this.sectionID);
+    this.nextSectionEvent.emit(nextSectionId);
+    //document.getElementById(nextSectionId)?.scrollIntoView({ behavior: 'smooth' }); FIXME
   }
-
-
-  isSectionVisible(){
+  
+  isVisible(): boolean {
     return this.stateMachine.isVisible(this.sectionID);
   }
-  
-  
-  showNextSection(event: MouseEvent) {
-    const nextSectionId = this.stateMachine.showNextSection(this.sectionID);
-    this.cdRef.detectChanges();
-    if (nextSectionId){
-      this.observers.forEach(observer => observer.notifySectionChange(nextSectionId));
 
-    }
-  }
-  
-  canScrollToNextSection(): boolean {
-    return true;
-  }
-  
-
-  constructor(private stateMachine: SectionVisibilityStateMachine, private elementRef: ElementRef, private cdRef: ChangeDetectorRef) { 
+  constructor(private elementRef: ElementRef, private stateMachine: SectionVisibilityStateMachine) { 
   }
   
   getElementRef(): ElementRef {

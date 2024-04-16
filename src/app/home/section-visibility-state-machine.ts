@@ -9,7 +9,7 @@ enum SectionState {
 interface Section {
 	id: string;
 	state: SectionState;
-	dependsOn?: string; // Optional property to handle dependency on other sections
+	nextID?: string; // Optional property to handle dependency on other sections
 }
 
 @Injectable({
@@ -20,7 +20,7 @@ export class SectionVisibilityStateMachine {
 	sections: Section[] = [];
 	
 	constructor() {
-		const sections = {
+		/*const sections = {
 			'start':{next:['select-food-forest']},
 			'select-food-forest':{next:['select-date']},
 			'select-date':{next:['select-ingredients']}, 
@@ -31,7 +31,7 @@ export class SectionVisibilityStateMachine {
 			'eat-or-preserve:':{
 				next:['eat', 'preserve']
 			}
-		}
+		}*/
 		const sectionIds = [
 			'start', 
 			'select-food-forest', 
@@ -40,8 +40,12 @@ export class SectionVisibilityStateMachine {
 			'customize-or-surprise',
 			'eat-or-preserve',
 			'specify-protein',
-				'no-specific-protein',
-				'select-protein',
+			'no-specific-protein',
+			'select-protein',
+			'surprise',
+			'disclaimer',
+			'generating',
+			'recipe'
 			
 			
 		];
@@ -55,31 +59,63 @@ export class SectionVisibilityStateMachine {
 	}
 
 	// Method to set visibility based on a condition, for example, a user's choice
-	setVisibilityBasedOnChoice(choice: string, targetSectionIds: string[]) {
-		if (choice === 'customize') {
-			targetSectionIds.forEach(id => {
-				const section = this.sections.find(section => section.id === id);
-				if (section) {
-					section.state = SectionState.Visible;
+	updateVisibilityBasedOnChoice(sectionID: string, choice: string) {
+		const section = this.getSectionById(sectionID);
+		const currentIndex = this.findCurrentIndex(sectionID);
+		
+		if (currentIndex !== -1 && currentIndex < this.sections.length - 2) { 
+			const section = this.sections[currentIndex];
+			if (section.nextID != choice){
+				// hide all subsequent sections
+				for (let i = currentIndex + 1; i < this.sections.length; i++){
+					const section = this.sections[i];
+					section.state = (section.id == choice)?SectionState.Visible:SectionState.Hidden;
 				}
-			});
+				console.log(`setting choice to ${section.nextID}`)
+				section.nextID = choice;
+			}
 		}
+		
+		
 	}
 
 	// Method to make the next section visible
 	showNextSection(currentSectionId: string): string | null {
-		const currentIndex = this.sections.findIndex(section => section.id === currentSectionId);
+		console.log(`ShowNextSection: ${currentSectionId}`);
+
+		const currentIndex = this.findCurrentIndex(currentSectionId);
 		if (currentIndex !== -1 && currentIndex < this.sections.length - 1) {
-			const section = this.sections[currentIndex + 1];
-			section.state = SectionState.Visible;			
-			return section.id;
+			const currentSection = this.sections[currentIndex];
+			let nextSection: Section | undefined;
+			if (currentSection.nextID){
+				nextSection = this.getSectionById(currentSection.nextID);
+				console.log(`Found nextsection: ${nextSection}`)
+			} else {
+				nextSection = this.sections[currentIndex + 1];
+			}
+			if (nextSection){
+				nextSection.state = SectionState.Visible;	
+				console.log(`Making visible section: ${nextSection.id}`);
+				return nextSection.id;
+			}
+			
 		}
 		return null;
+	}
+	
+	findCurrentIndex(currentSectionId: string): number {
+		return this.sections.findIndex(section => section.id === currentSectionId);
+	}
+	
+	getSectionById(sectionID: string): Section | undefined{
+		return this.sections.find(section => section.id === sectionID);
 	}
 
 	// Check if a section is visible
 	isVisible(id: string): boolean {
 		let val = this.sections.find(section => section.id === id)?.state === SectionState.Visible;
+		//console.log(`Checking visibility for ${id}: ${val}`);
+
 		return val;
 	}
 }

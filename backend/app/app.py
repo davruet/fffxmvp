@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, send_from_directory
-import openai
+from openai import OpenAI
 import os
 import extract
 from flask_cors import CORS
@@ -8,7 +8,6 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
-openai.api_key = os.getenv('OPENAI_API_KEY')
 spreadsheet_id = '1kLVqLL64OQNjpYVZQokzUlawOFHI2g19KMSHPbVLrgU' # FIXME parameterize me
 
 @app.route('/generate', methods=['POST'])
@@ -17,18 +16,24 @@ def generate_text():
 		return jsonify({"error": "Request must be JSON"}), 400
 
 	content = request.get_json()
-
-	# Assuming the JSON object has a key 'prompt' to use as the OpenAI prompt
-	prompt_text = content.get('prompt', '')
-	if not prompt_text:
-		return jsonify({"error": "JSON must include a 'prompt' key"}), 400
-
+	
+	client = OpenAI(
+		# This is the default and can be omitted
+		api_key=os.environ.get("OPENAI_API_KEY"),
+	)
 	try:
-		# Call OpenAI API
-		response = openai.Completion.create(engine="text-davinci-003", prompt=prompt_text, max_tokens=100)
-		return jsonify({"response": response.choices[0].text.strip()})
+		chat_completion = client.chat.completions.create(
+			messages=[
+				{
+					"role": "user",
+					"content": content.get('prompt', ''),
+				}
+			],
+			model="gpt-3.5-turbo",
+		)
+		return jsonify(chat_completion.choices[0].message.content)
 	except Exception as e:
-		return jsonify({"error": str(e)}), 500
+			return jsonify({"error": str(e)}), 500
 	
 @app.route('/extract', methods=['GET'])
 def extractParameters():
