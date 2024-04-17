@@ -41,14 +41,14 @@ export class SectionService {
 	'surprise': {next: ['disclaimer']},
 	'disclaimer': {
 		choices: [{
-		  value: 'generating',
+		  value: 'generate',
 		  label: 'Yes'
 		}, {
 		  value: 'no',
 		  label: 'No'
 		}]
 	  },
-	  'generating': {next: ['recipe']},
+	  'generate': {next: ['recipe']},
 	  'recipe': {},
   };
 

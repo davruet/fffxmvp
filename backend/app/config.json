@@ -1,5 +1,6 @@
 {
 	"spreadsheet-id":"1kLVqLL64OQNjpYVZQokzUlawOFHI2g19KMSHPbVLrgU",
-	"service-account-file":"./crafty-almanac-420514-ee7c27c499af.json"
-	
+	"service-account-file":"./crafty-almanac-420514-ee7c27c499af.json",
+	"model":"gpt-3.5-turbo",
+	"prompt-footer": "\n The response must be formatted with HTML markup, without <html> or <body> tags."
 }
