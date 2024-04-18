@@ -25,6 +25,15 @@ export class ImageAccordionComponent  implements OnInit {
     console.log(`Item ${item.name} enabled status: ${item.enabled}`);
     this.changeDetected.emit(this.items);  // Emitting the item that was changed
   }
+  
+  onToggleClicked(event:MouseEvent):void{
+    event.stopPropagation();
+  }
+  onHeaderClicked(event:MouseEvent):void{
+    event.stopPropagation();
+  }
+  
+
 
 
 }
