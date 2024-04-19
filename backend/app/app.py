@@ -18,7 +18,7 @@ CORS(app)
 with open('./config.json', 'r') as config:
 	app.config.update(json.load(config))
 	
-		
+
 credentials = Credentials.from_service_account_file(
     app.config.get("service-account-file"),
     scopes=SCOPES
@@ -43,7 +43,7 @@ recipeSegments, imageTemplate = loadRecipeTemplates()
 def extract_parameters_impl():
 	return extract.extract_spreadsheet_data(credentials, app.config.get("spreadsheet-id"))
 
-@app.route('/extract', methods=['GET'])
+@app.route('/api/extract', methods=['GET'])
 def extract_parameters():
 	return jsonify(extract_parameters_impl())
 
@@ -67,7 +67,7 @@ ensure_params_exists()
 def generateImage(prompt):
 	return "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAFElEQVR4nGNkYPjPgBsw4ZEbwdIAPy4BE1xg8ZcAAAAASUVORK5CYII="
 
-@app.route('/generate', methods=['POST'])
+@app.route('/api/generate', methods=['POST'])
 def generate_text():
 	if not request.is_json:
 		return jsonify({"error": "Request must be JSON"}), 400
@@ -114,7 +114,7 @@ def generate_text():
 	except Exception as e:
 			return jsonify({"error": str(e), "ex": traceback.format_exception(e)}), 500
 	
-@app.route('/parameters', methods=['GET'])
+@app.route('/api/parameters', methods=['GET'])
 def get_parameters():
 
 	ensure_params_exists()
@@ -124,4 +124,4 @@ def get_parameters():
 
 
 if __name__ == '__main__':
-	app.run(debug=True, host="0.0.0.0", port="8080")
+	app.run(debug=True, host="0.0.0.0", port="5000")
