@@ -15,32 +15,45 @@ SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 app = Flask(__name__)
 CORS(app)
 
+def getCredentials():
+	config_json = os.getenv('SHEETS_SERVICE_ACCOUNT_CONFIG')
+	if config_json:
+		print("Loading service account credentials from env variable.")
+		return Credentials.from_service_account_info( json.loads(config_json))
+	else:
+		return Credentials.from_service_account_file(
+		app.config.get("service-account-file"),
+		scopes=SCOPES
+)
+
 with open('./config.json', 'r') as config:
 	app.config.update(json.load(config))
 	
-
-credentials = Credentials.from_service_account_file(
-    app.config.get("service-account-file"),
-    scopes=SCOPES
-)
 
 params_file_name = 'parameters.json'
 params_dir = './'	
 parameters = {}
 
+openai_api_key = os.environ.get("OPENAI_API_KEY")
+
+if not openai_api_key:
+	print("OPENAI_API_KEY env variable required.")
+	exit(-1)
+	
 client = OpenAI(
-	# This is the default and can be omitted
-	api_key=os.environ.get("OPENAI_API_KEY"),
+	api_key=openai_api_key.strip(),
 )
 		
 
 def loadRecipeTemplates():
-	return Path('./recipe.html').read_text().split("<!-- CONTENT -->"), Template(Path('./imagescript.html').read_text())
+	return Path('./recipe.html').read_text().split("<!-- CONTENT -->"), Template(Path('./image.html').read_text())
 
 recipeSegments, imageTemplate = loadRecipeTemplates()
-		
+
+credentials = getCredentials()
 
 def extract_parameters_impl():
+	print("Retrieving parameters JSON from Google Sheets API...")
 	return extract.extract_spreadsheet_data(credentials, app.config.get("spreadsheet-id"))
 
 @app.route('/api/extract', methods=['GET'])
@@ -65,7 +78,20 @@ def ensure_params_exists():
 ensure_params_exists()
 
 def generateImage(prompt):
-	return "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAFElEQVR4nGNkYPjPgBsw4ZEbwdIAPy4BE1xg8ZcAAAAASUVORK5CYII="
+	imagePrompt = parameters["IMAGE PROMPTS"][0]["Prompts"]
+	finalPrompt = imagePrompt + "\n" + prompt
+	trimmedPrompt = finalPrompt[:4000]
+	response = client.images.generate(
+		model="dall-e-3",
+		style="natural",
+		prompt=trimmedPrompt,
+		size="1024x1024",
+		quality="standard",
+		n=1,
+		response_format="b64_json"
+	)
+	#return "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAFElEQVR4nGNkYPjPgBsw4ZEbwdIAPy4BE1xg8ZcAAAAASUVORK5CYII="
+	return response.data[0].b64_json
 
 @app.route('/api/generate', methods=['POST'])
 def generate_text():
@@ -112,7 +138,8 @@ def generate_text():
 				
 		return Response(generate(), mimetype='text/html')
 	except Exception as e:
-			return jsonify({"error": str(e), "ex": traceback.format_exception(e)}), 500
+			print(jsonify({"error": str(e), "ex": traceback.format_exception(e)}))
+			return jsonify({"error": "There was a server error."}), 500
 	
 @app.route('/api/parameters', methods=['GET'])
 def get_parameters():
