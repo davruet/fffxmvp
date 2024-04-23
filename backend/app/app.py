@@ -1,19 +1,23 @@
 from flask import Flask, request, jsonify, send_from_directory, Response
 from openai import OpenAI
 from google.oauth2.service_account import Credentials
+import uuid
 import os
 import extract
-from flask_cors import CORS
+#from flask_cors import CORS
 import json
 from string import Template
 import traceback
 from pathlib import Path
+from gcloud import GCSUploader
+from image_gen import generateImage;
 
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly',
+		  'https://www.googleapis.com/auth/gmail.send']
 
 
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
 
 def getCredentials():
 	config_json = os.getenv('SHEETS_SERVICE_ACCOUNT_CONFIG')
@@ -43,7 +47,6 @@ if not openai_api_key:
 client = OpenAI(
 	api_key=openai_api_key.strip(),
 )
-		
 
 def loadRecipeTemplates():
 	return Path('./recipe.html').read_text().split("<!-- CONTENT -->"), Template(Path('./image.html').read_text())
@@ -51,6 +54,11 @@ def loadRecipeTemplates():
 recipeSegments, imageTemplate = loadRecipeTemplates()
 
 credentials = getCredentials()
+
+uploader = GCSUploader(credentials)
+
+upload_uri_base = f"https://storage.googleapis.com/{app.config.get('bucket-name')}/"
+
 
 def extract_parameters_impl():
 	print("Retrieving parameters JSON from Google Sheets API...")
@@ -77,21 +85,6 @@ def ensure_params_exists():
 
 ensure_params_exists()
 
-def generateImage(prompt):
-	imagePrompt = parameters["IMAGE PROMPTS"][0]["Prompts"]
-	finalPrompt = imagePrompt + "\n" + prompt
-	trimmedPrompt = finalPrompt[:4000]
-	response = client.images.generate(
-		model="dall-e-3",
-		style="natural",
-		prompt=trimmedPrompt,
-		size="1024x1024",
-		quality="standard",
-		n=1,
-		response_format="b64_json"
-	)
-	#return "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAFElEQVR4nGNkYPjPgBsw4ZEbwdIAPy4BE1xg8ZcAAAAASUVORK5CYII="
-	return response.data[0].b64_json
 
 @app.route('/api/generate', methods=['POST'])
 def generate_text():
@@ -123,6 +116,9 @@ def generate_text():
 			model=app.config.get("model"),
 			stream=True,
 		)
+		id = uuid.uuid4()
+		
+		# Generator for the response
 		def generate():
 			yield recipeSegments[0] # return the first part of the recipe
 			recipeChunks = []
@@ -133,10 +129,15 @@ def generate_text():
 					yield content
 			print("Done with responses.")
 			yield recipeSegments[1]
-			yield imageTemplate.substitute({"imgdata":generateImage("".join(recipeChunks))})
+			# FIXME use a random image prompt
+			image_data = generateImage(client, parameters["IMAGE PROMPTS"][0]["Prompts"], "".join(recipeChunks))
+			image_name =  f"{id}.jpeg"
+			uploader.upload(image_data, app.config.get('bucket-name'), image_name,"image/jpeg")
+			print(f"Uploaded image {image_name}")
+			yield imageTemplate.substitute({"imgsrc":upload_uri_base + image_name})
 			yield recipeSegments[2]
 				
-		return Response(generate(), mimetype='text/html')
+		return Response(save_and_pass(generate(), uploader, f"{id}.html"), mimetype='text/html')
 	except Exception as e:
 			print(jsonify({"error": str(e), "ex": traceback.format_exception(e)}))
 			return jsonify({"error": "There was a server error."}), 500
@@ -147,6 +148,16 @@ def get_parameters():
 	ensure_params_exists()
 			
 	return send_from_directory(params_dir, params_file_name)
+
+def save_and_pass(generator, uploader, filename):
+	# Accumulate content from the generator
+	content = []
+	for chunk in generator:
+		content.append(chunk)
+		yield chunk  # You can still yield the chunk to a response
+
+	complete_content = ''.join(content)
+	uploader.upload(complete_content, app.config.get('bucket-name'), filename, "text/html")
 
 
 

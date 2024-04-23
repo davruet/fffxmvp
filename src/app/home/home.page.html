@@ -31,124 +31,137 @@
 </div>
 
 <ion-content class="ion-padding" [fullscreen]="true" id="container">
-  <app-base-section [sectionID]="'start'" (nextSectionEvent)="scrollToSection($event)">
-    <ion-text section-body color="primary">Hi.<br>
+  <app-base-section [sectionID]="'start'" >
+    <ion-text section-body color="primary"><h3>Hi.<br>
 And welcome.<br>
 I will help you create recipes that combine seasonal food forest ingredients with alternative protein products.<br>
 <br>
-Let’s get started.
+Let’s get started.</h3>
+    </ion-text>
+    <br><br>
+    <ion-text color="secondary">
+      <h4>Whenever you are ready to continue, simply click the down arrow.</h4>
     </ion-text>
   </app-base-section>
   
-  <app-base-section [sectionID]="'select-food-forest'" (nextSectionEvent)="scrollToSection($event)">
+  <app-base-section [sectionID]="'select-food-forest'" >
     <ion-text section-body color="primary">
-      First, let’s select food forest ingredients near you!<br><br>
-      Choose where you will get your ingredients from:<br>      
+      <h3>First, let’s select food forest ingredients near you!<br><br>
+      Choose where you will get your ingredients from:<br></h3>
       <item-list [items]="foodForests" (changeDetected)="handleFFChange($event)"></item-list>
     </ion-text>
   </app-base-section>
  
-    <app-base-section [sectionID]="'select-date'" (nextSectionEvent)="scrollToSection($event)">
+    <app-base-section [sectionID]="'select-date'" >
       <div section-body>
       <ion-text  color="primary">
-      Now, to find out which ingredients are available, let me know what date you would like to cook:<br>
+        <h3>Now, to find out which ingredients are available, let me know what date you would like to cook:<br></h3>
 
     </ion-text>
-    <ion-datetime [isDateEnabled]="isValidDate" yearValues="2024,2025" presentation="date" [preferWheel]="true"></ion-datetime>
+    <ion-datetime color="primary-contrast" [isDateEnabled]="isValidDate" yearValues="2024,2025" presentation="date" [preferWheel]="true"></ion-datetime>
     </div>
     </app-base-section>
     
     
-    <app-base-section [sectionID]="'select-ingredients'" (nextSectionEvent)="scrollToSection($event)">
+    <app-base-section [sectionID]="'select-ingredients'" >
       <div section-body >
       <ion-text color="primary">
-      Got it. Here is a list of food forest ingredients available that week.<br><br>
-      Explore the ingredients and edit your list below.
+        <h3>Got it. Here is a list of food forest ingredients available that week.<br><br>
+      Explore the ingredients and edit your list below.</h3>
     </ion-text>
     
       <image-accordion [items]="ingredients" (changeDetected)="handleIngredientsChange($event)"></image-accordion>
     </div>
     </app-base-section>
     
-    <app-base-section [sectionID]="'customize-or-surprise'" (nextSectionEvent)="scrollToSection($event)">
+    <app-base-section [sectionID]="'customize-or-surprise'" >
       <app-choice-section [sectionID]="'customize-or-surprise'">
       <ion-text color="primary">
-      Great!<br><br>
-      Do you want to customise and shape your recipe further, or do you want to skip that step to generate a recipe now and be surprised?
+        <h3>Great!<br><br>
+      Do you want to customise and shape your recipe further, or do you want to skip that step to generate a recipe now and be surprised?</h3>
     </ion-text>
     </app-choice-section>
     </app-base-section>
     
     <!--<section *ngIf="customizeOrSurprise === 'customize'" #section class="page">-->
-      <app-base-section [sectionID]="'eat-or-preserve'" (nextSectionEvent)="scrollToSection($event)">
+      <app-base-section [sectionID]="'eat-or-preserve'" >
         <app-choice-section [sectionID]="'eat-or-preserve'">
         <ion-text section-body color="primary">
-          Wonderful!<br>
+          <h3>Wonderful!<br>
           Now let’s shape your recipe.<br>
-          First, do you want to eat your recipe right away or preserve something for the future?<br>
+          First, do you want to eat your recipe right away or preserve something for the future?<br></h3>
         </ion-text>
       </app-choice-section>
       </app-base-section>
     
     <!--<section *ngIf="customizeOrSurprise === 'customize' && eatOrPreserve === 'eat'" #section class="page">-->
-      <app-base-section [sectionID]="'specify-protein'" (nextSectionEvent)="scrollToSection($event)">
+      <app-base-section [sectionID]="'specify-protein'" >
         <app-choice-section [sectionID]="'specify-protein'">
       <ion-text section-body color="primary">
-        Fantastic!
-        Before you customise your recipe, do you want to select a specific alternative protein product?
+        <h3>Fantastic!<br>
+        Before you customise your recipe, do you want to select a specific alternative protein product?</h3>
        </ion-text>
       </app-choice-section>
       </app-base-section>
       
     
     <!--<section *ngIf="customizeOrSurprise === 'customize' && eatOrPreserve === 'eat' && protein === 'noThanks'" #section class="page">-->
-      <app-base-section [sectionID]="'no-specific-protein'" (nextSectionEvent)="scrollToSection($event)">
+      <app-base-section [sectionID]="'typology'" >
       <ion-text section-body color="primary">
-        No problem.
-        Using the food forest ingredients, let’s generate a delicious recipe for you to cook. Help fill out the following text to create your recipe:
+        <h3>No problem.<br>
+        Using the food forest ingredients, let’s generate a delicious recipe for you to cook. Help fill out the following text to create your recipe:</h3>
     </ion-text>
   </app-base-section>
     
     <!--<section *ngIf="customizeOrSurprise === 'customize' && eatOrPreserve === 'eat' && protein === 'selectProtein'" #section class="page">-->
-      <app-base-section (nextSectionEvent)="scrollToSection($event)">
+      <app-base-section [sectionID]="'select-protein'" >
       <ion-text section-body color="primary">
-        Splendid.
+        <h3>Splendid.<br>
         Using the food forest ingredients plus an alternative protein of your choice, let’s generate a delicious recipe for you to cook. Help fill out the following text to create your recipe:
-
+        </h3>
       </ion-text>    
       </app-base-section>
     
     
     <!--<section *ngIf="customizeOrSurprise === 'customize' && eatOrPreserve == 'preserve'" #section class="page">-->
-      <app-base-section (nextSectionEvent)="scrollToSection($event)">
+      <app-base-section [sectionID]="'preserve'">
       <ion-text section-body color="primary">
-        Perfect.
-        Using the food forest ingredients, let’s generate a delicious recipe that can be eaten later. Help fill out the following text to create your recipe:
+        <h3>Perfect.<br>
+        Using the food forest ingredients, let’s generate a delicious recipe that can be eaten later. Help fill out the following text to create your recipe:</h3>
     </ion-text>
       </app-base-section>
     
     <!-- Surprise me path-->
-    <app-base-section [sectionID]="'surprise'" (nextSectionEvent)="scrollToSection($event)">
+    <app-base-section [sectionID]="'surprise'" >
     <!--<section *ngIf="customizeOrSurprise === 'surprise'" #section class="page">-->
       <ion-text section-body color="primary">
-        Fun!
-        Using your food forest ingredients list, let’s generate a delicious recipe for you to cook.
+        <h3>Fun!<br>
+        Using your food forest ingredients list, let’s generate a delicious recipe for you to cook.</h3>
     </ion-text>
 
     </app-base-section>
     
-    <app-base-section [sectionID]="'disclaimer'" (nextSectionEvent)="scrollToSection($event)">
+    <app-base-section [sectionID]="'disclaimer'" >
       <app-choice-section [sectionID]="'disclaimer'">
       <ion-text section-body color="primary">       
-        DISCLAIMER
+        <h3>DISCLAIMER<br>
         This is a thinking and tinkering tool. The following recipe is a lucid hallucination generated by AI and cannot be held accountable for bad taste, being nutritionally deficient, or even poisonous. It is your responsibility to create a safe and delicious recipe in the kitchen.
-        <br><br>Do you want to proceed?<br>
+        <br><br>Do you want to proceed?<br></h3>
      </ion-text>
      </app-choice-section>
      
     </app-base-section>
     
-    <app-base-section [showNextButton]="false" [sectionID]="'generate'" (nextSectionEvent)="scrollToSection($event)">
+    <app-base-section [sectionID]="'no'">
+      <div section-body>
+        <ion-text color="primary">
+          <h3>Understandable.
+          Have a great day!</h3>
+      </ion-text>
+    </div>
+    </app-base-section>
+    
+    <app-base-section [showNextButton]="false" [sectionID]="'generate'" [showNextButton]="false" >
       <ion-button section-body color="primary" (click)="generateRecipe()"><ion-text>Generate</ion-text></ion-button>
     </app-base-section>
     
@@ -156,6 +169,65 @@ Let’s get started.
       <div section-body>
         <ion-text color="primary" class="recipe-text">
          <app-data-fetcher class="recipe" [requestObject]="recipePrompt" [styles]="{'font-size': '24px', 'white-space':'normal'}"></app-data-fetcher>
+      </ion-text>
+    </div>
+    </app-base-section>
+    
+    <app-base-section [sectionID]="'do-you-like'">
+      <app-choice-section [sectionID]="'do-you-like'">
+      <div section-body>
+        <ion-text color="primary">
+          <h3>Do you like this recipe?</h3>
+      </ion-text>
+    </div>
+    </app-choice-section>
+    </app-base-section>
+    
+    <app-base-section [sectionID]="'like'">
+      <app-choice-section [sectionID]="'like'">
+      <div section-body>
+        <ion-text color="primary">
+          <h3>Great!<br>
+          Should I send you the recipe?</h3>
+      </ion-text>
+    </div>
+    </app-choice-section>
+    </app-base-section>
+    
+    <app-base-section [sectionID]="'dislike'">
+      <app-choice-section [sectionID]="'dislike'">
+      <div section-body>
+        <ion-text color="primary">
+          <h3>That’s too bad!<br>
+          Should I send you the recipe anyway?</h3>
+      </ion-text>
+      </div>
+    </app-choice-section>
+    </app-base-section>
+    
+    <app-base-section [sectionID]="'email'">
+      <div section-body>
+        <ion-text color="primary">
+          <ion-input label="Email" placeholder="Enter email address"></ion-input>
+          <ion-button>Send</ion-button>
+      </ion-text>
+    </div>
+    </app-base-section>
+    
+    <app-base-section [sectionID]="'startover'">
+      <app-choice-section [sectionID]="'startover'">
+      <div section-body>
+        <ion-text color="primary">
+          <h3>What would you like to do?</h3>
+        </ion-text>
+      </div>
+      </app-choice-section>
+    </app-base-section>
+    
+    <app-base-section [sectionID]="'done'">
+      <div section-body>
+        <ion-text color="primary">
+          <h3>Done.</h3>
       </ion-text>
     </div>
     </app-base-section>

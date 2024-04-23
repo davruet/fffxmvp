@@ -6,7 +6,6 @@ services:
       - "8080:8080"
     volumes:
       - ./app:/app
-      - ./www:/app/static
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - SHEETS_SERVICE_ACCOUNT_CONFIG=${SHEETS_SERVICE_ACCOUNT_CONFIG}
