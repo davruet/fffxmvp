@@ -103,7 +103,9 @@ export class HomePage implements AfterViewInit, OnInit {
         id: index + 1, // Assuming ID starts from 1 and increments
         name: item["ABREVIATION (20-25 ch)"], 
         enabled: false,
-        description: item["20-40 WORDS"]
+        description: item["20-40 WORDS"],
+        imgsrc: item["PHOTO LINK"],
+        sciname: item["PLANT SCI NAME (Subtitle)"]
         //available: index < 5 // FIXME
       }});
       console.log(this.ingredients);

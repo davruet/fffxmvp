@@ -8,7 +8,8 @@ import { Choice, SectionService } from './section.service';
         <ng-content></ng-content>
         <br><br>
           <ion-radio-group (ionChange)=onRadioChange($event)>
-            <ion-radio *ngFor="let choice of choices" [value] = "choice.value" labelPlacement="start"><h3>{{choice.label}}</h3></ion-radio> 
+            <ion-radio *ngFor="let choice of choices" [value] = "choice.value" labelPlacement="start"><h3>{{choice.label}}</h3></ion-radio>
+            <br *ngIf="choices && choices.length > 2">
           </ion-radio-group>
       </div>
   `,

@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       annotations:
-        autoscaling.knative.dev/maxScale: '1'
+        autoscaling.knative.dev/maxScale: '2'
         run.googleapis.com/client-name: gcloud
         run.googleapis.com/client-version: 472.0.0
         run.googleapis.com/startup-cpu-boost: 'true'

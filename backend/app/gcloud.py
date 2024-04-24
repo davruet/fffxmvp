@@ -1,7 +1,7 @@
 from google.cloud import storage
 import base64
 
-class GCSUploader:
+class GCSService:
 	
 	def __init__(self, credentials):
 		self.client = storage.Client(credentials=credentials)
@@ -18,3 +18,9 @@ class GCSUploader:
 			# Upload the content to Google Cloud Storage
 			blob.upload_from_string(content, content_type=mime_type)
 			print("Upload complete.")
+			
+	def get_bytes(self, bucket_name, filename):
+		bucket = self.client.bucket(bucket_name)
+		blob = bucket.blob(filename)
+		data = blob.download_as_bytes()
+		return data

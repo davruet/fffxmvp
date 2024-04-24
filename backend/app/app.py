@@ -1,6 +1,8 @@
 from flask import Flask, request, jsonify, send_from_directory, Response
 from openai import OpenAI
 from google.oauth2.service_account import Credentials
+from google.cloud.exceptions import NotFound, Forbidden
+
 import uuid
 import os
 import extract
@@ -9,7 +11,7 @@ import json
 from string import Template
 import traceback
 from pathlib import Path
-from gcloud import GCSUploader
+from gcloud import GCSService
 from image_gen import generateImage;
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly',
@@ -55,7 +57,7 @@ recipeSegments, imageTemplate = loadRecipeTemplates()
 
 credentials = getCredentials()
 
-uploader = GCSUploader(credentials)
+gcs_service = GCSService(credentials)
 
 upload_uri_base = f"https://storage.googleapis.com/{app.config.get('bucket-name')}/"
 
@@ -71,16 +73,17 @@ def extract_parameters():
 
 def ensure_params_exists():
 	global parameters
-	path = os.path.join(params_dir, params_file_name)
-	if not os.path.exists(path):
-		print(f"{path} not found, loading from Google Sheets...")
-		with open(path, 'w') as file:
-			parameters = json.dumps(extract_parameters_impl())
-			file.write(parameters)
-	else:
-		print("Opening params file.")
-		with open(path, "r") as file:
-			parameters = json.load(file)
+	# Exit early if params exists
+	if parameters:
+		return
+	try:
+		bucket_name = app.config.get('bucket-name')
+		data = gcs_service.get_bytes(bucket_name, params_file_name)
+		parameters = json.loads(data.decode('utf-8'))
+	except (NotFound, Forbidden) as e :
+		print(f"{params_file_name} not found in bucket {bucket_name}, e={e} loading from Google Sheets...")
+		parameters = extract_parameters_impl()
+		gcs_service.upload(json.dumps(parameters), bucket_name, params_file_name, "text/json")
 
 
 ensure_params_exists()
@@ -132,12 +135,12 @@ def generate_text():
 			# FIXME use a random image prompt
 			image_data = generateImage(client, parameters["IMAGE PROMPTS"][0]["Prompts"], "".join(recipeChunks))
 			image_name =  f"{id}.jpeg"
-			uploader.upload(image_data, app.config.get('bucket-name'), image_name,"image/jpeg")
+			gcs_service.upload(image_data, app.config.get('bucket-name'), image_name,"image/jpeg")
 			print(f"Uploaded image {image_name}")
 			yield imageTemplate.substitute({"imgsrc":upload_uri_base + image_name})
 			yield recipeSegments[2]
 				
-		return Response(save_and_pass(generate(), uploader, f"{id}.html"), mimetype='text/html')
+		return Response(save_and_pass(generate(), gcs_service, f"{id}.html"), mimetype='text/html')
 	except Exception as e:
 			print(jsonify({"error": str(e), "ex": traceback.format_exception(e)}))
 			return jsonify({"error": "There was a server error."}), 500
