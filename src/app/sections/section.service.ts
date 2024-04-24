@@ -11,6 +11,7 @@ enum SectionState {
 }
 
 interface Section {
+  id: string;
   next?: string;
   choices?: Choice[];
   isVisible?: SectionState;
@@ -27,17 +28,17 @@ export class SectionService {
   
   getNextSection(sectionID: string): string | undefined {
     const s = this.sections[sectionID];
-    return s.next;
+    return s.section.next;
   }
   
   private nextSectionEvent:EventEmitter<String> = new EventEmitter();
 
-  private sections: { [key: string]: Section } = {
-    'start': {next: 'select-food-forest'},
-    'select-food-forest': {next: 'select-date'},
-    'select-date': {next: 'select-ingredients'},
-    'select-ingredients': {next: 'customize-or-surprise'},
-    'customize-or-surprise': {
+  private sectionsOrdered: Section[]  = [
+     {id: 'start', next: 'select-food-forest'},
+     {id: 'select-food-forest', next: 'select-date'},
+     {id: 'select-date', next: 'select-ingredients'},
+     {id: 'select-ingredients', next: 'customize-or-surprise'},
+     {id: 'customize-or-surprise',
       choices: [{
         value: 'eat-or-preserve',
         label: 'Customize'
@@ -46,7 +47,7 @@ export class SectionService {
         label: 'Surprise'
       }]
     },
-    'eat-or-preserve': {
+    {id: 'eat-or-preserve',
       choices: [{
         value: 'specify-protein',
         label: 'Eat'
@@ -55,7 +56,7 @@ export class SectionService {
         label: 'Preserve'
       }]
     },
-    'specify-protein': {
+    {id: 'specify-protein',
       choices: [{
         value: 'typology',
         label: 'No Thanks'
@@ -64,15 +65,15 @@ export class SectionService {
         label: 'Select Protein'
       }]
     },
-    'typology': {
+    {id: 'typology',
       next: 'generate'
     },
-    'select-protein': {
+    {id: 'select-protein',
       next: 'generate'
     },
-  'preserve': {next: 'generate'},
-	'surprise': {next: 'disclaimer'},
-	'disclaimer': {
+    {id: 'preserve',next: 'generate'},
+    {id: 'surprise',next: 'disclaimer'},
+    {id: 'disclaimer',
 		choices: [{
 		  value: 'generate',
 		  label: 'Yes'
@@ -81,12 +82,12 @@ export class SectionService {
 		  label: 'No'
 		}]
 	  },
-    'no':{
+    {id: 'no',
       
     },
-	  'generate': {next: 'recipe'},
-	  'recipe': { next: 'do-you-like'},
-    'do-you-like': {
+	  {id: 'generate', next: 'recipe'},
+	  {id: 'recipe', next: 'do-you-like'},
+    {id: 'do-you-like', 
         choices: [{
         value: 'like',
         label: 'Yes'
@@ -94,7 +95,7 @@ export class SectionService {
         value: 'dislike',
 		  label: 'No'
 		}]},
-    'like':{
+    {id: 'like',
       choices: [{
         value: 'email',
         label: 'Yes'
@@ -102,7 +103,7 @@ export class SectionService {
         value: 'startover',
 		  label: 'No Thanks'
     }]},
-    'dislike':{
+    {id: 'dislike',
       choices: [{
         value: 'email',
         label: 'Yes'
@@ -110,10 +111,10 @@ export class SectionService {
         value: 'startover',
 		  label: 'No Thanks'
     }]},
-    'email':{
+    {id: 'email',
       next:'startover'  
     },
-    'startover':{
+    {id: 'startover',
       choices: [{
         value: 'generate',
         label: 'Generate another recipe'
@@ -125,17 +126,22 @@ export class SectionService {
 		    label: 'Thanks, I\'m done!'
       }
     ]},
-    'done':{
+    {id: 'done',
       
     }
-  };
+  ];
+  
+  sections: { [key: string]: { section: Section, index: number } } = this.sectionsOrdered.reduce((acc, section, index) => {
+    acc[section.id] = { section, index };
+    return acc;
+}, {} as { [key: string]: { section: Section, index: number } });
 
   constructor() { 
-    Object.keys(this.sections).forEach(k=>{
-      this.sections[k].isVisible = SectionState.Hidden;
+    this.sectionsOrdered.forEach(s=>{
+      s.isVisible = SectionState.Hidden;
     })
     const first = this.sections['start'];
-    first.isVisible = SectionState.Visible;
+    first.section.isVisible = SectionState.Visible;
 
   }
   
@@ -144,12 +150,12 @@ export class SectionService {
   }
 
   getSectionById(sectionId: string): Section | undefined {
-    return this.sections[sectionId];
+    return this.sections[sectionId].section;
   }
   
   showSection(sectionID: string){
     const s = this.sections[sectionID];
-    s.isVisible = SectionState.Visible;
+    s.section.isVisible = SectionState.Visible;
     this.nextSectionEvent.emit(sectionID);
   }
   
@@ -177,31 +183,32 @@ export class SectionService {
       console.log(`Section ${id} not found.`);
       return false;
     } else {
-      return section.isVisible == SectionState.Visible;
+      return section.section.isVisible == SectionState.Visible;
     }
   }
   
 
   updateVisibilityBasedOnChoice(sectionID: string, choice: string) {
     const section = this.sections[sectionID];
-    // check if section already is visible, we will skip setting next later if so
-    const wasVisible: boolean = this.sections[choice].isVisible === SectionState.Visible;
-    if (section.choices){
-      const change = section.next !== choice;
+    // check if section already is visible, we will skip setting next later if so, and simply hide everything after
+    const nextSection = this.sections[choice];
+    if (section.section.choices){
+      const change = section.section.next !== choice;
       if (change){
-        let next: string | undefined = choice;
-        while (next){  
-          const s : Section = this.sections[next];
-          s.isVisible = SectionState.Hidden;
-          console.log(`hid section ${next}`);
-          next = s.next;
+        for (let i = section.index + 1; i < this.sectionsOrdered.length; i++){
+          this.sectionsOrdered[i].isVisible = SectionState.Hidden;
+          console.log(`hiding section ${this.sectionsOrdered[i].id}`)
+          if (this.sectionsOrdered[i].choices){ // clear next if there are choices.
+            this.sectionsOrdered[i].next = undefined;
+          }
         }
+        
       }
       
-      if (!wasVisible) {
+      if (nextSection.index > section.index) {
         // new section, add it to the path.
-        section.next = choice;
-      }
+        section.section.next = choice;
+      } 
       this.showSection(choice);
 
     } else {
