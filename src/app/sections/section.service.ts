@@ -37,11 +37,11 @@ export class SectionService {
      {id: 'start', next: 'select-food-forest'},
      {id: 'select-food-forest', next: 'select-date'},
      {id: 'select-date', next: 'select-ingredients'},
-     {id: 'select-ingredients', next: 'customize-or-surprise'},
-     {id: 'customize-or-surprise',
+     {id: 'select-ingredients', next: 'customise-or-surprise'},
+     {id: 'customise-or-surprise',
       choices: [{
         value: 'eat-or-preserve',
-        label: 'Customize'
+        label: 'Customise'
       }, {
         value: 'surprise',
         label: 'Surprise'
