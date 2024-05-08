@@ -2,6 +2,8 @@ from flask import Flask, request, jsonify, send_from_directory, Response
 from openai import OpenAI
 from google.oauth2.service_account import Credentials
 from google.cloud.exceptions import NotFound, Forbidden
+from flask_cors import CORS
+
 
 import uuid
 import os
@@ -13,6 +15,7 @@ import traceback
 from pathlib import Path
 from gcloud import GCSService
 from image_gen import generateImage;
+from safe import walk_json
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly',
 		  'https://www.googleapis.com/auth/gmail.send']
@@ -39,6 +42,7 @@ with open('./config.json', 'r') as config:
 params_file_name = 'parameters.json'
 params_dir = './'	
 parameters = {}
+all_prompts = set({})
 
 openai_api_key = os.environ.get("OPENAI_API_KEY")
 
@@ -70,23 +74,50 @@ def extract_parameters_impl():
 def extract_parameters():
 	return jsonify(extract_parameters_impl())
 
+def upload(parameters, bucket_name):
+	gcs_service.upload(json.dumps(parameters), bucket_name, params_file_name, "text/json")
 
+def set_parameters(newParameters):
+	global parameters
+	global all_prompts
+	parameters = newParameters
+	## all RecipeOption and ingredient prompts go in all_prompts
+	for item in parameters['options']:
+		all_prompts.add(item['prompt'])
+	
+	for item in parameters['Food Forest Ingredient']:
+		all_prompts.add(item['ABREVIATION (20-25 ch)'])
+		
 def ensure_params_exists():
 	global parameters
 	# Exit early if params exists
 	if parameters:
 		return
+	
+	bucket_name = app.config.get('bucket-name')
 	try:
 		bucket_name = app.config.get('bucket-name')
 		data = gcs_service.get_bytes(bucket_name, params_file_name)
-		parameters = json.loads(data.decode('utf-8'))
+		new_params = json.loads(data.decode('utf-8'))
 	except (NotFound, Forbidden) as e :
 		print(f"{params_file_name} not found in bucket {bucket_name}, e={e} loading from Google Sheets...")
-		parameters = extract_parameters_impl()
-		gcs_service.upload(json.dumps(parameters), bucket_name, params_file_name, "text/json")
+		new_params = extract_parameters_impl()
+		upload(new_params, bucket_name)
+	set_parameters(new_params)
 
 
 ensure_params_exists()
+
+
+def safe_params(request):
+	unsafe_params = walk_json(request, all_prompts, {"type"})
+	if len(unsafe_params) > 0:
+		raise Exception(f"Unsafe parameters found: {unsafe_params}")
+			
+
+def stringify_key(values, key):
+	if key in values:
+		values[key] = ",".join(values[key]) # substitute for string.
 
 
 @app.route('/api/generate', methods=['POST'])
@@ -97,7 +128,10 @@ def generate_text():
 		return jsonify({"error": "Prompt configuration not loaded."}), 400
 
 	try:
+		print(f"starting")
+
 		requestArg = request.get_json()
+		print (requestArg)
 		type = requestArg['type']
 		print(f"prompttype {type}")
 		prompts = parameters["prompt-templates"]
@@ -107,7 +141,17 @@ def generate_text():
 		
 		promptText = promptTemplateDef[0]["prompt"] + app.config.get("prompt-footer", "")
 		promptTemplate = Template( promptText)
-		filledPrompt = promptTemplate.substitute(requestArg) # fill in the template
+		safe_params(requestArg) # check to make sure nobody's messing	 with the prompt
+		
+		values = requestArg
+		stringify_key(values, 'ingredients')
+			
+		stringify_key(values, 'accommodations')
+		
+		try:
+			filledPrompt = promptTemplate.substitute(values) # fill in the template
+		except KeyError as e:
+			print(f"Error: Missing key {e}")
 		
 		chat_completion = client.chat.completions.create(
 			messages=[
@@ -142,6 +186,8 @@ def generate_text():
 				
 		return Response(save_and_pass(generate(), gcs_service, f"{id}.html"), mimetype='text/html')
 	except Exception as e:
+			print(f"ERROR: {e}")
+			traceback.print_exception(e)
 			print(jsonify({"error": str(e), "ex": traceback.format_exception(e)}))
 			return jsonify({"error": "There was a server error."}), 500
 	
@@ -150,7 +196,7 @@ def get_parameters():
 
 	ensure_params_exists()
 			
-	return send_from_directory(params_dir, params_file_name)
+	return jsonify(parameters)
 
 def save_and_pass(generator, uploader, filename):
 	# Accumulate content from the generator
@@ -165,4 +211,5 @@ def save_and_pass(generator, uploader, filename):
 
 
 if __name__ == '__main__':
-	app.run(debug=True, host="0.0.0.0", port="5000")
+	CORS(app, resources={r"/*": {"origins": "http://localhost:8100"}})
+	app.run(debug=True, host="0.0.0.0", port="5001")

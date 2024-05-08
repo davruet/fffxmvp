@@ -43,7 +43,7 @@ export class SectionService {
         value: 'eat-or-preserve',
         label: 'Customise'
       }, {
-        value: 'surprise',
+        value: 'surprise-me',
         label: 'Surprise'
       }]
     },
@@ -61,18 +61,18 @@ export class SectionService {
         value: 'typology',
         label: 'No Thanks'
       }, {
-        value: 'select-protein',
+        value: 'mvp',
         label: 'Select Protein'
       }]
     },
     {id: 'typology',
       next: 'generate'
     },
-    {id: 'select-protein',
+    {id: 'mvp',
       next: 'generate'
     },
     {id: 'preserve',next: 'generate'},
-    {id: 'surprise',next: 'disclaimer'},
+    {id: 'surprise-me',next: 'disclaimer'},
     {id: 'disclaimer',
 		choices: [{
 		  value: 'generate',

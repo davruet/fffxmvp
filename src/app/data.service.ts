@@ -10,18 +10,18 @@ import { environment } from '../environments/environment'; // Import environment
 })
 export class DataService {
 	
-private triggerGenerateRecipe = new Subject<void>();
+private triggerGenerateRecipe = new Subject<string>();
 
   constructor(private http: HttpClient) {}
 
   // Observable to be triggered from another component
-  getGenerateRecipeTrigger(): Observable<void> {
+  getGenerateRecipeTrigger(): Observable<string> {
     return this.triggerGenerateRecipe.asObservable();
   }
 
   // Method to be called to trigger the fetchData
-  generateRecipe() {
-    this.triggerGenerateRecipe.next();
+  generateRecipe(json:string) {
+    this.triggerGenerateRecipe.next(json);
   }
 
   postRecipe(body:any): Observable<string> {

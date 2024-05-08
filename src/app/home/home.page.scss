@@ -39,3 +39,14 @@
   word-break: break-word; /* Prevents overflow by breaking long words */
   font-family: serif;
 }
+
+ion-datetime {
+  --background: #fff;
+  --background-rgb: 255,255,255;
+}
+
+ion-select {
+  display: inline-block;  /* Makes the select element inline */
+  width: auto;            /* Adjust width as needed */
+  //vertical-align: middle; /* Aligns vertically if in line with other elements */
+}
