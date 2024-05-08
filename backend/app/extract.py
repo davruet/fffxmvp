@@ -54,7 +54,7 @@ def extract_spreadsheet_data(creds, spreadsheet_id):
             data = []
             last_first_column_value = None # first column may have values omitted, copy from previous.
 
-            for row in rows[1:]:
+            for index, row in enumerate(rows[1:]):
                 if all(value is None for value in row):
                     continue
                 row += [None] * (len(headers) - len(row))
@@ -62,7 +62,9 @@ def extract_spreadsheet_data(creds, spreadsheet_id):
                     row[0] = last_first_column_value
                 else:
                     last_first_column_value = row[0]
-                data.append(dict(zip(headers, row)))
+                obj = dict(zip(headers, row))
+                obj["id"] = f"{title}-{index}"
+                data.append(obj)
                 
             all_data[title] = data
     return all_data

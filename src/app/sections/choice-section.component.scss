@@ -1,17 +1,32 @@
 
-ion-radio::part(container) {
-  border: none;
-  background: transparent;
-  box-shadow: none;
-  width:0px;
+ion-segment-button::content{
+  --color: #888;
+  --color-checked: #245633;
 }
 
-ion-radio::part(label){
-  color:#999;
+ion-segment-button {
+    --padding-start: 0px;
+   --margin-start: 0px;
 }
-ion-radio.radio-checked::part(label) {
-  color:  var(--ion-color-primary);
+
+ion-segment {
+  --background: transparent;
 }
+
+/*
+ion-segment-button::part(indicator-background) {
+  background: transparent;
+}
+
+
+ion-segment-button {
+  --border-style: none;
+}
+.segment-button-checked {
+  color: #f00;
+  --background: #f00;
+}*/
+
 //ion-radio::part(label){
   /*
   --color: red;

@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  dataUrl: '/api/parameters', 
-  generateUrl: '/api/generate',
-  imageUrl:'/api/generateImage'
+  dataUrl: '//localhost:5001/api/parameters', 
+  generateUrl: '//localhost:5001/api/generate',
+  imageUrl:'//localhost:5001/api/generateImage'
 };
 
 /*

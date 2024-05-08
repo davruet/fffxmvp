@@ -17,6 +17,7 @@ class GCSService:
 
 			# Upload the content to Google Cloud Storage
 			blob.upload_from_string(content, content_type=mime_type)
+			blob.cache_control = "public, max-age=300"
 			print("Upload complete.")
 			
 	def get_bytes(self, bucket_name, filename):

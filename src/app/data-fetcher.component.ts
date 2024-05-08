@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DataService } from './data.service';
-import { BasicRecipe } from './recipe.interfaces';
 
 @Component({
   selector: 'app-data-fetcher',
@@ -11,13 +10,14 @@ export class DataFetcherComponent implements OnInit {
 
   constructor(private dataService: DataService) {}
   
-  @Input() requestObject!: any;
   @Input() styles: any;
   
   ngOnInit() {
-    this.dataService.getGenerateRecipeTrigger().subscribe(() => {
+    this.dataService.getGenerateRecipeTrigger().subscribe((json) => {
       this.dataStream = ''; // clear old recipe.
-      this.dataService.postRecipe(this.requestObject).subscribe({
+      console.log("Request object: " + json);
+
+      this.dataService.postRecipe(json).subscribe({
         next: partialHTML => {
           this.dataStream += partialHTML;
         },

@@ -28,11 +28,20 @@ export class ImageAccordionComponent  implements OnInit {
   
   onToggleClicked(event:MouseEvent):void{
     event.stopPropagation();
-  }
+  }/*
   onHeaderClicked(event:MouseEvent):void{
     event.stopPropagation();
-  }
+  }*/
   
+  
+  clickEvent(event:MouseEvent){
+    this.changeDetected.emit(this.items);
+
+    const target = event.target as HTMLElement;
+    if (target.tagName === "ION-TOGGLE"){
+      event.stopPropagation();
+    }
+  }
 
 
 

@@ -58,7 +58,7 @@ Let’s get started.</h3>
         <h3>Now, to find out which ingredients are available, let me know what date you would like to cook:<br></h3>
 
     </ion-text>
-    <ion-datetime color="primary-contrast" [isDateEnabled]="isValidDate" yearValues="2024,2025" presentation="date" [preferWheel]="true"></ion-datetime>
+    <ion-datetime color="primary-contrast" (ionChange)="onDateChange($event)" yearValues="2024,2025" presentation="date" [preferWheel]="true"></ion-datetime>
     </div>
     </app-base-section>
     
@@ -70,7 +70,7 @@ Let’s get started.</h3>
       Explore the ingredients and edit your list below.</h3>
     </ion-text>
     
-      <image-accordion [items]="ingredients" (changeDetected)="handleIngredientsChange($event)"></image-accordion>
+      <image-accordion [items]="availableIngredients" (changeDetected)="handleIngredientsChange($event)"></image-accordion>
     </div>
     </app-base-section>
     
@@ -110,10 +110,16 @@ Let’s get started.</h3>
     </ion-text>
   </app-base-section>
     
-      <app-base-section [sectionID]="'select-protein'" >
+      <app-base-section [sectionID]="'mvp'" >
       <ion-text section-body color="primary">
         <h3>Splendid.<br><br>
         Using the food forest ingredients plus an alternative protein of your choice, let's generate a delicious recipe for you to cook. Help fill out the following text to create your recipe:
+        
+        I want to use <ion-select [(ngModel)]="recipeOptions.mvp" interface="popover" placeholder="mvp" ><ion-select-option *ngFor="let item of mvps" [value]="item">{{item.name}}</ion-select-option></ion-select>
+        in the culinary style of <ion-select [(ngModel)]="recipeOptions.culinaryStyle" interface="popover" placeholder="style" ><ion-select-option *ngFor="let item of filterOptions(this.options,'culinary-style')" [value]="item">{{item.name}}</ion-select-option></ion-select>
+        My recipe should be served <ion-select [(ngModel)]="recipeOptions.servingStyle" interface="popover" placeholder="serving" ><ion-select-option *ngFor="let item of filterOptions(this.options, 'serving')" [value]="item">{{item.name}}</ion-select-option></ion-select>
+        The recipe must <ion-select [(ngModel)]="recipeOptions.directive" interface="popover" placeholder="requirement" ><ion-select-option *ngFor="let item of filterOptions(this.options,'directive')" [value]="item">{{item.name}}</ion-select-option></ion-select>
+        and accommodate <ion-select [multiple]="true" [(ngModel)]="recipeOptions.accommodations" interface="popover" placeholder="acommmodations" ><ion-select-option *ngFor="let item of filterOptions(this.options,'accommodations')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
         </h3>
       </ion-text>    
       </app-base-section>
@@ -127,7 +133,7 @@ Let’s get started.</h3>
       </app-base-section>
     
     <!-- Surprise me path-->
-    <app-base-section [sectionID]="'surprise'" >
+    <app-base-section [sectionID]="'surprise-me'" >
       <ion-text section-body color="primary">
         <h3>Fun!<br><br>
         Using your food forest ingredients list, let's generate a delicious recipe for you to cook.</h3>
@@ -162,7 +168,7 @@ Let’s get started.</h3>
     <app-base-section [sectionID]="'recipe'">
       <div section-body>
         <ion-text color="primary" class="recipe-text">
-         <app-data-fetcher class="recipe" [requestObject]="recipePrompt" [styles]="{'font-size': '24px', 'white-space':'normal'}"></app-data-fetcher>
+         <app-data-fetcher class="recipe" [styles]="{'font-size': '24px', 'white-space':'normal'}"></app-data-fetcher>
       </ion-text>
     </div>
     </app-base-section>

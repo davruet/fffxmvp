@@ -7,10 +7,10 @@ import { Choice, SectionService } from './section.service';
       <div>
         <ng-content></ng-content>
         <br><br>
-          <ion-radio-group (ionChange)=onRadioChange($event)>
-            <ion-radio *ngFor="let choice of choices" [value] = "choice.value" labelPlacement="start"><h3>{{choice.label}}</h3></ion-radio>
+          <ion-segment (ionChange)=onChange($event)>
+            <ion-segment-button *ngFor="let choice of choices" [value] = "choice.value" labelPlacement="start"><ion-text><h3>{{choice.label}}</h3></ion-text></ion-segment-button>
             <br *ngIf="choices && choices.length > 2">
-          </ion-radio-group>
+          </ion-segment>
       </div>
   `,
   styleUrls: ['choice-section.component.scss']
@@ -29,7 +29,7 @@ export class ChoiceSectionComponent implements OnInit{
     console.log(`Initialized with choices: ${this.choices}`)
   }
   
-  onRadioChange(event: CustomEvent) {
+  onChange(event: CustomEvent) {
     console.log('Selected Value: ', event.detail.value);
 	  this.sectionService.updateVisibilityBasedOnChoice(this.sectionID, event.detail.value);
     this.sectionService.showNextSection(this.sectionID);

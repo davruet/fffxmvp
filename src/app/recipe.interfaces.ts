@@ -1,38 +1,39 @@
 
 export interface FoodForest {
-	id: number;
+	id: string;
 	name: string;
 	enabled: boolean;
-  }
-  
+}
 
-  export interface RecipeOption {
-	id: number;
+
+export interface RecipeOption {
+	id: string;
 	type: string;
 	name: string;
 	prompt: string;
 	abbreviation: string;
 	enabled: boolean;
-  }
-  
- export interface PromptTemplate {
+}
+
+export interface PromptTemplate {
 	type: string;
 	prompt: string;
-  }
-  
+}
+
 export interface Ingredient {
-	id: number;
+	id: string;
 	name: string;
 	enabled: boolean; // rename to selected
-	available: boolean;
+	availableWeeks: string;
 	description: string;
-  }
-  
+	foodForest: FoodForest;
+}
+
 
 export interface IngredientList {
-	ingredients: String[];
-  }
-  
+	ingredients: Ingredient[]; // fixme use Ingredient
+}
+
 export interface MVP {
 	productName: string;
 	companyName: string;
@@ -40,34 +41,44 @@ export interface MVP {
 	mvpCategory: string;
 	abbreviation: string;
 }
-  
-export interface BasicRecipe {
+
+export interface BasicRecipe extends IngredientList {
 	type: string;
-	directive?: any;
+	accommodations?: RecipeOption[];
+	date?: Date;
 }
-  
-  // For the Surprise-me category
-  export interface SurpriseRecipe extends BasicRecipe, IngredientList {
-	mvp: string;
-	style: string;
-	serving: string;
-  }
-  
-  // For the Preserved category
-  export   interface PreservedRecipe extends BasicRecipe, IngredientList {
-	dietaryRestrictions?: any;
-	taste: string;
-	texture: string;
-	level: string;
-	fermentTime: string;
-  }
-  
-  // Assuming similar structures for fresh-by-typology and fresh-by-product
-  export interface FreshByTypology extends BasicRecipe, IngredientList {
-	typology: string;  // Example field, assuming typology categorization
-  }
-  
-  export interface FreshByProduct extends BasicRecipe, IngredientList {
-	productType: string;  // Example field, assuming specific product categorization
-  }
+
+export interface FreshRecipe extends BasicRecipe {
+	directive?: RecipeOption;
+	culinaryStyle?: RecipeOption;
+	servingStyle?: RecipeOption;
+	serving?: RecipeOption;
+}
+
+export interface SurpriseRecipe extends BasicRecipe {
+	mvp?: RecipeOption;
+	culinaryStyle?: RecipeOption;
+	servingStyle?: RecipeOption;
+	directive?: RecipeOption;
+}
+
+export interface PreservedRecipe extends BasicRecipe {
+	taste?: RecipeOption;
+	texture?: RecipeOption;
+	level?: RecipeOption;
+	fermentTime?: RecipeOption;
+}
+
+export interface FreshByTypology extends FreshRecipe {
+	typology?: RecipeOption;
+
+}
+
+export interface FreshByProduct extends FreshRecipe {
+	mvp?: RecipeOption;
+}
+
+export interface AllRecipeOptions extends FreshByProduct, FreshByTypology, PreservedRecipe, SurpriseRecipe {
+
+}
 

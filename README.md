@@ -1,13 +1,20 @@
 # FFFxMVP
 
-## Requirements
+## Development Prerequisites
 
+Local:
 * Docker
 * OpenAI account with positive balance, API key
+* Gmail api key
+* Angular CLI
 
 GCloud deployment:
 * Gcloud CLI: https://cloud.google.com/sdk/docs/install
 * Google Cloud Run account with billing configured
+
+## Accessiblity
+
+The software is available on GitHub: http://davruet.github.com...
 
 
 ## Architecture overview
@@ -108,7 +115,14 @@ Create a bucket for file storage.
 ```
 gsutil mb -l EUROPE-WEST1 gs://fffxmvp/
 gsutil defacl set public-read gs://fffxmvp
+gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
+  --member='serviceAccount:your-service-account@example.iam.gserviceaccount.com' \
+  --role='roles/storage.objectAdmin'
+gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
+  --member='user:mvpxfff@gmail.com' \
+  --role='roles/storage.objectAdmin'
 ```
+
 
 ```
 gcloud projects add-iam-policy-binding fffxmvp \
