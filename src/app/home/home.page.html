@@ -55,9 +55,7 @@
     <ion-text *ngIf="recipeOptions.directive" color="primary">{{ recipeOptions.directive.abbreviation}}<br></ion-text>
     <ion-text *ngIf="recipeOptions.mvp" color="primary">{{ recipeOptions.mvp.abbreviation}}<br></ion-text>
 
-    <div *ngFor="let a of recipeOptions.accommodations">
-      <ion-text color="primary">{{ a.abbreviation}}<br></ion-text>
-    </div>
+    <ion-text *ngFor="let a of recipeOptions.accommodations" color="primary">{{ a.abbreviation}}<br></ion-text>
     <br>
     </div>
     <div *ngIf="isSectionVisible('mvp')">
@@ -66,9 +64,7 @@
       <ion-text *ngIf="recipeOptions.culinaryStyle" color="primary">{{ recipeOptions.culinaryStyle.abbreviation}}<br></ion-text>
       <ion-text *ngIf="recipeOptions.servingStyle" color="primary">{{ recipeOptions.servingStyle.abbreviation}}<br></ion-text>
       <ion-text *ngIf="recipeOptions.directive" color="primary">{{ recipeOptions.directive.abbreviation}}<br></ion-text>
-      <div *ngFor="let a of recipeOptions.accommodations">
-        <ion-text color="primary">{{ a.abbreviation}}<br></ion-text>
-      </div>
+      <ion-text *ngFor="let a of recipeOptions.accommodations" color="primary">{{ a.abbreviation}}<br></ion-text>
       <br>
       </div>
     <div *ngIf="isSectionVisible('preserve')">
@@ -77,9 +73,7 @@
       <ion-text *ngIf="recipeOptions.texture" color="primary">{{ recipeOptions.texture.abbreviation}}<br></ion-text>
       <ion-text *ngIf="recipeOptions.skill" color="primary">{{ recipeOptions.skill.abbreviation}}<br></ion-text>
       <ion-text *ngIf="recipeOptions.timeframe" color="primary">{{ recipeOptions.timeframe.abbreviation}}<br></ion-text>
-      <div *ngFor="let a of recipeOptions.accommodations">
-        <ion-text color="primary">{{ a.abbreviation}}<br></ion-text>
-      </div>
+      <ion-text *ngFor="let a of recipeOptions.accommodations" color="primary">{{ a.abbreviation}}<br></ion-text>
       <br>
       </div>
   <!--</div>-->
