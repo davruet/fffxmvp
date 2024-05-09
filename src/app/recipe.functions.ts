@@ -47,12 +47,26 @@ export function jsonForRecipe(options: AllRecipeOptions): any{
          };
     case 'typology': 
         const typology: FreshByTypology = options as FreshByTypology;
-        return "NYI"; // FIXME
-        break;
+        return { 
+          type:typology.type,
+          style: typology.culinaryStyle?.prompt,
+          serving: typology.servingStyle?.prompt,
+          directive: typology.directive?.prompt,
+          ingredients: typology.ingredients.map(i=>i.name),
+          typology: typology.typology?.prompt,
+          accommodations: typology.accommodations?.map(a=>a.prompt) || [],
+          mvp: typology.mvp?.prompt || "no mvp"
+         };
     case 'preserve':
         const preserve: PreservedRecipe = options as PreservedRecipe;
-        return "NYI"; // FIXME
-        break;
+        return {
+          flavor: preserve.flavor?.prompt,
+          texture: preserve.texture?.prompt,
+          skill: preserve.skill?.prompt,
+          timeframe: preserve.timeframe?.prompt,
+          preservationType: preserve.preservationType?.prompt,
+          accommodations: preserve.accommodations?.map(a=>a.prompt) || [],
+        }
     default:
       throw new Error("Invalid recipe type: " + options.type);
   }

@@ -147,14 +147,11 @@ export class HomePage implements AfterViewInit, OnInit {
     if (this.recipeOptions.date){
       available = filterIngredientsByDate( available, this.recipeOptions.date);
     }
-    console.log(`Available ingredients: ${available}`)
     this.availableIngredients = available;
     this.handleIngredientsChange(this.availableIngredients);
   }
   
   handleFFChange(updatedItems: any[]){
-    console.log(`changes ${updatedItems}`);
-    console.log("food forests change!");
     this.refreshIngredients();
     //let validForests:FoodForest[] = this.foodForests.filter(f=>f.enabled);
     //console.log(validForests);
@@ -171,7 +168,6 @@ export class HomePage implements AfterViewInit, OnInit {
 handleIngredientsChange(updatedItems: any){
     const filteredIngredients = (updatedItems as Ingredient[]).filter(i=>i.enabled);
     this.recipeOptions.ingredients = filteredIngredients
-    console.log(`ingredients change ${filteredIngredients}`);
   }
 
 getServingStyles(){
@@ -194,7 +190,9 @@ randomizeSurprise(){
     surprise.culinaryStyle = this.randomElement(this.getCulinaryStyles());
     surprise.directive = this.randomElement(this.getDirectives());
   }
-  
+}
+randomizeFreshMVP(){
+  this.recipeOptions.mvp = this.randomElement(filterOptions(this.options, "mvp"));
 }
 
 randomElement<T>(arg: T[]): T{
@@ -212,15 +210,21 @@ requestRecipeData(){
 generateRecipe(){
   console.log("GENERATING");
   console.log(this.recipeOptions)
-  if (this.recipeOptions.type === 'surprise-me'){
-    this.randomizeSurprise();
+  // Apply randomized selection to those that need it. Do this every time to allow repeated clicks/randomizations
+  switch (this.recipeOptions.type){
+    case 'surprise-me':
+      this.randomizeSurprise();
+      break;
+    case 'typology':
+      this.randomizeFreshMVP();
+      break;
   }
+ 
   const recipeJson = jsonForRecipe(this.recipeOptions); // set this for the data service.
   console.log(recipeJson);
   this.dataService.generateRecipe(recipeJson);
   // manually show next and scroll
   this.sectionService.showSection('recipe');
-  //this.scrollToSection('recipe');
 }
 
   

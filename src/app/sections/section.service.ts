@@ -197,7 +197,7 @@ export class SectionService {
       if (change){
         for (let i = section.index + 1; i < this.sectionsOrdered.length; i++){
           this.sectionsOrdered[i].isVisible = SectionState.Hidden;
-          console.log(`hiding section ${this.sectionsOrdered[i].id}`)
+          //console.log(`hiding section ${this.sectionsOrdered[i].id}`)
           if (this.sectionsOrdered[i].choices){ // clear next if there are choices.
             this.sectionsOrdered[i].next = undefined;
           }
