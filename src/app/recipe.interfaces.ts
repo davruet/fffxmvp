@@ -63,15 +63,16 @@ export interface SurpriseRecipe extends BasicRecipe {
 }
 
 export interface PreservedRecipe extends BasicRecipe {
-	taste?: RecipeOption;
+	flavor?: RecipeOption;
 	texture?: RecipeOption;
-	level?: RecipeOption;
-	fermentTime?: RecipeOption;
+	skill?: RecipeOption;
+	timeframe?: RecipeOption;
+	preservationType?: RecipeOption;
 }
 
 export interface FreshByTypology extends FreshRecipe {
 	typology?: RecipeOption;
-
+	mvp?: RecipeOption;
 }
 
 export interface FreshByProduct extends FreshRecipe {

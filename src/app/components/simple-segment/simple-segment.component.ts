@@ -9,7 +9,7 @@ export class SimpleSegmentComponent {
   @Input() items: string[] = []; // Input array of text items
   @Output() selectionChange = new EventEmitter<number>(); // Output event emitter
 
-  selected: number = 0; // Currently selected item index
+  selected: number = -1; // Currently selected item index
 
   constructor() { }
 

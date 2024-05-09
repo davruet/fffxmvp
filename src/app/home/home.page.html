@@ -106,7 +106,13 @@ Let’s get started.</h3>
       <app-base-section [sectionID]="'typology'" >
       <ion-text section-body color="primary">
         <h3>No problem.<br><br>
-          You chose the food forest ingredients and I'll choose the alternative protein. Help fill out the following text to create your delicious recipe:</h3>
+          You chose the food forest ingredients and I'll choose the alternative protein. Help fill out the following text to create your delicious recipe:<br><br>
+          I want to make <ion-select [(ngModel)]="recipeOptions.typology" interface="popover" placeholder="type" ><ion-select-option *ngFor="let item of filterOptions(this.options,'typology')" [value]="item">{{item.name}}</ion-select-option></ion-select>
+          in the culinary style of <ion-select [(ngModel)]="recipeOptions.culinaryStyle" interface="popover" placeholder="style" ><ion-select-option *ngFor="let item of filterOptions(this.options,'culinary-style')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
+          My recipe should be served <ion-select [(ngModel)]="recipeOptions.servingStyle" interface="popover" placeholder="serving" ><ion-select-option *ngFor="let item of filterOptions(this.options, 'serving')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
+          The recipe must <ion-select [(ngModel)]="recipeOptions.directive" interface="popover" placeholder="requirement" ><ion-select-option *ngFor="let item of filterOptions(this.options,'directive')" [value]="item">{{item.name}}</ion-select-option></ion-select>
+          and accommodate <ion-select [multiple]="true" [(ngModel)]="recipeOptions.accommodations" interface="popover" placeholder="acommmodations" ><ion-select-option *ngFor="let item of filterOptions(this.options,'accommodations')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
+        </h3>
     </ion-text>
   </app-base-section>
     
@@ -116,8 +122,8 @@ Let’s get started.</h3>
         Using the food forest ingredients plus an alternative protein of your choice, let's generate a delicious recipe for you to cook. Help fill out the following text to create your recipe:
         
         I want to use <ion-select [(ngModel)]="recipeOptions.mvp" interface="popover" placeholder="mvp" ><ion-select-option *ngFor="let item of mvps" [value]="item">{{item.name}}</ion-select-option></ion-select>
-        in the culinary style of <ion-select [(ngModel)]="recipeOptions.culinaryStyle" interface="popover" placeholder="style" ><ion-select-option *ngFor="let item of filterOptions(this.options,'culinary-style')" [value]="item">{{item.name}}</ion-select-option></ion-select>
-        My recipe should be served <ion-select [(ngModel)]="recipeOptions.servingStyle" interface="popover" placeholder="serving" ><ion-select-option *ngFor="let item of filterOptions(this.options, 'serving')" [value]="item">{{item.name}}</ion-select-option></ion-select>
+        in the culinary style of <ion-select [(ngModel)]="recipeOptions.culinaryStyle" interface="popover" placeholder="style" ><ion-select-option *ngFor="let item of filterOptions(this.options,'culinary-style')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
+        My recipe should be served <ion-select [(ngModel)]="recipeOptions.servingStyle" interface="popover" placeholder="serving" ><ion-select-option *ngFor="let item of filterOptions(this.options, 'serving')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
         The recipe must <ion-select [(ngModel)]="recipeOptions.directive" interface="popover" placeholder="requirement" ><ion-select-option *ngFor="let item of filterOptions(this.options,'directive')" [value]="item">{{item.name}}</ion-select-option></ion-select>
         and accommodate <ion-select [multiple]="true" [(ngModel)]="recipeOptions.accommodations" interface="popover" placeholder="acommmodations" ><ion-select-option *ngFor="let item of filterOptions(this.options,'accommodations')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
         </h3>
@@ -128,8 +134,15 @@ Let’s get started.</h3>
       <app-base-section [sectionID]="'preserve'">
       <ion-text section-body color="primary">
         <h3>Perfect.<br><br>
-          Using those food forest ingredients, let's generate a delicious recipe that can be paired with an alternative protein at a later date. Help fill out the following text to create your recipe:</h3>
-    </ion-text>
+          <h3>
+          Using those food forest ingredients, let's generate a delicious recipe that can be paired with an alternative protein at a later date. Help fill out the following text to create your recipe:</h3><br><br>
+          I want to make a recipe that is <ion-select [(ngModel)]="recipeOptions.flavor" interface="popover" placeholder="flavour" ><ion-select-option *ngFor="let item of filterOptions(this.options,'flavor')" [value]="item">{{item.name}}</ion-select-option></ion-select>
+          and <ion-select [(ngModel)]="recipeOptions.texture" interface="popover" placeholder="texture" ><ion-select-option *ngFor="let item of filterOptions(this.options,'texture')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
+          The recipe should be for <ion-select [(ngModel)]="recipeOptions.skill" interface="popover" placeholder="chef" ><ion-select-option *ngFor="let item of filterOptions(this.options, 'skill')" [value]="item">{{item.name}}</ion-select-option></ion-select>
+          to make and can be eaten after <ion-select [(ngModel)]="recipeOptions.timeframe" interface="popover" placeholder="timeframe" ><ion-select-option *ngFor="let item of filterOptions(this.options,'timeframe')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
+          The recipe must accommodate <ion-select [multiple]="true" [(ngModel)]="recipeOptions.accommodations" interface="popover" placeholder="acommmodations" ><ion-select-option *ngFor="let item of filterOptions(this.options,'accommodations')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
+        </h3>
+       </ion-text>
       </app-base-section>
     
     <!-- Surprise me path-->
@@ -208,8 +221,10 @@ Let’s get started.</h3>
     <app-base-section [sectionID]="'email'">
       <div section-body>
         <ion-text color="primary">
+          <h3>
           <ion-input label="Email" placeholder="Enter email address"></ion-input>
-          <ion-button>Send</ion-button>
+          <ion-button >Send</ion-button>
+         </h3>
       </ion-text>
     </div>
     </app-base-section>

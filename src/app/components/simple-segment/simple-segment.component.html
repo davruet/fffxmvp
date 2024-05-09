@@ -5,6 +5,7 @@
       (click)="selectItem(i)">
       <h3>{{ item }}</h3>
     </ion-text>
+    <br *ngIf="items.length > 2 && i < items.length - 1">
     <ng-container *ngIf="i < items.length - 1">
       <ion-text style="color: grey;"><h3>&nbsp;&nbsp;|&nbsp;&nbsp;</h3></ion-text>
     </ng-container>

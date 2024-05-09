@@ -31,7 +31,6 @@ export class ChoiceSectionComponent implements OnInit{
   ngOnInit(){
     this.choices = this.sectionService.getSectionById(this.sectionID)?.choices;
     if (this.choices) this.choicesStr = this.choices.map(c=>c.label);
-    console.log(`Initialized with choices: ${this.choices}`)
   }
   
   onSelectionChange(i: number) {
