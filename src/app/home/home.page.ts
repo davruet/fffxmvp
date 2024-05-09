@@ -259,6 +259,21 @@ generateRecipe(){
     }
     
   }
+  
+  shouldDisableTypologyButton = ():boolean =>{
+    const typology : FreshByTypology = this.recipeOptions as FreshByTypology;
+    return !typology.culinaryStyle || !typology.directive || !typology.servingStyle || !typology.typology;
+  }
+  shouldDisablePreservedButton = ():boolean =>{
+    const preserved : PreservedRecipe = this.recipeOptions as PreservedRecipe;
+    return !preserved.flavor || !preserved.texture || !preserved.skill || ![preserved.timeframe];
+  }
+  shouldDisableMVPButton = () =>{
+    const mvp : FreshByProduct = this.recipeOptions as FreshByProduct;
+    return !mvp.culinaryStyle || !mvp.directive  || !mvp.servingStyle || !mvp.mvp;
+  }
+
+
 
 
   /*

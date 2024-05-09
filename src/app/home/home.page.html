@@ -103,7 +103,7 @@ Let’s get started.</h3>
       </app-base-section>
       
     
-      <app-base-section [sectionID]="'typology'" >
+      <app-base-section [sectionID]="'typology'" [disableButtonFunction]="shouldDisableTypologyButton" >
       <ion-text section-body color="primary">
         <h3>No problem.<br><br>
           You chose the food forest ingredients and I'll choose the alternative protein. Help fill out the following text to create your delicious recipe:<br><br>
@@ -116,7 +116,7 @@ Let’s get started.</h3>
     </ion-text>
   </app-base-section>
     
-      <app-base-section [sectionID]="'mvp'" >
+      <app-base-section [sectionID]="'mvp'" [disableButtonFunction]="shouldDisableMVPButton" >
       <ion-text section-body color="primary">
         <h3>Splendid.<br><br>
         Using the food forest ingredients plus an alternative protein of your choice, let's generate a delicious recipe for you to cook. Help fill out the following text to create your recipe:
@@ -131,7 +131,7 @@ Let’s get started.</h3>
       </app-base-section>
     
     
-      <app-base-section [sectionID]="'preserve'">
+      <app-base-section [sectionID]="'preserve'" [disableButtonFunction]="shouldDisablePreservedButton" >
       <ion-text section-body color="primary">
         <h3>Perfect.<br><br>
           <h3>

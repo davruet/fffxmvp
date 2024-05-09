@@ -19,7 +19,7 @@ import { SectionService } from './section.service';
 
       <ng-content></ng-content> <!-- Place for subclass content -->
       <br>
-      <ion-button class="section-button" *ngIf="showNextButton" (click)="nextSection()" fill="clear">
+      <ion-button class="section-button" *ngIf="showNextButton" (click)="nextSection()" fill="clear" [disabled]="disableButtonFunction()">
         <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
       </ion-button>
   
@@ -33,8 +33,12 @@ export class SectionComponent implements OnInit {
   
   @Input() sectionID: string = "";
   @Input() showNextButton: boolean = true;
+  @Input() disableButtonFunction: () => boolean = () => false;
 
   @Output() nextSectionEvent = new EventEmitter<string | null>();
+  
+  isButtonDisabled = false; // Initialize with the default state of the button
+
 
 
   nextSection() {
