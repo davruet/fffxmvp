@@ -66,12 +66,12 @@ export class SectionService {
       }]
     },
     {id: 'typology',
-      next: 'generate'
+      next: 'disclaimer'
     },
     {id: 'mvp',
-      next: 'generate'
+      next: 'disclaimer'
     },
-    {id: 'preserve',next: 'generate'},
+    {id: 'preserve',next: 'disclaimer'},
     {id: 'surprise-me',next: 'disclaimer'},
     {id: 'disclaimer',
 		choices: [{
