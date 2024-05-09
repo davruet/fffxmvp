@@ -20,13 +20,68 @@
 <div class="floating-menu">
   <ion-menu-button></ion-menu-button>
   <!--<div *ngIf="visibleSectionIndex >= 1">--> <!-- FIXME is this working? Probably broken with new state manager-->
+  <div *ngIf="isSectionVisible('select-food-forest')"> 
   <ion-text color="primary">SOURCES</ion-text>
-  
   <ion-text color="primary" *ngFor="let item of foodForests">
     <div *ngIf="item.enabled">
       {{ item.name }}
     </div>
   </ion-text>  
+  <br><br>
+  </div>
+  
+  <div *ngIf="isSectionVisible('select-date')">
+  <ion-text color="primary">DATE</ion-text><br>
+  <ion-text color="primary">{{ recipeOptions.date | date : "d MMM y"}}</ion-text>
+  <br><br>
+  </div>
+  
+  <div *ngIf="isSectionVisible('select-ingredients')"> 
+  <ion-text color="primary">INGREDIENTS</ion-text>
+  
+  <ion-text color="primary" *ngFor="let item of recipeOptions.ingredients">
+    <div *ngIf="item.enabled">
+      {{ item.name }}
+    </div>
+  </ion-text>
+  <br><br>
+  </div>
+  
+  <div *ngIf="isSectionVisible('typology')">
+    <ion-text color="primary">EAT TODAY</ion-text><br>
+    <ion-text *ngIf="recipeOptions.typology" color="primary">{{ recipeOptions.typology.abbreviation}}<br></ion-text>
+    <ion-text *ngIf="recipeOptions.culinaryStyle" color="primary">{{ recipeOptions.culinaryStyle.abbreviation}}<br></ion-text>
+    <ion-text *ngIf="recipeOptions.servingStyle" color="primary">{{ recipeOptions.servingStyle.abbreviation}}<br></ion-text>
+    <ion-text *ngIf="recipeOptions.directive" color="primary">{{ recipeOptions.directive.abbreviation}}<br></ion-text>
+    <ion-text *ngIf="recipeOptions.mvp" color="primary">{{ recipeOptions.mvp.abbreviation}}<br></ion-text>
+
+    <div *ngFor="let a of recipeOptions.accommodations">
+      <ion-text color="primary">{{ a.abbreviation}}<br></ion-text>
+    </div>
+    <br>
+    </div>
+    <div *ngIf="isSectionVisible('mvp')">
+      <ion-text color="primary">PRODUCT</ion-text><br>
+      <ion-text *ngIf="recipeOptions.mvp" color="primary">{{ recipeOptions.mvp.abbreviation}}<br></ion-text>
+      <ion-text *ngIf="recipeOptions.culinaryStyle" color="primary">{{ recipeOptions.culinaryStyle.abbreviation}}<br></ion-text>
+      <ion-text *ngIf="recipeOptions.servingStyle" color="primary">{{ recipeOptions.servingStyle.abbreviation}}<br></ion-text>
+      <ion-text *ngIf="recipeOptions.directive" color="primary">{{ recipeOptions.directive.abbreviation}}<br></ion-text>
+      <div *ngFor="let a of recipeOptions.accommodations">
+        <ion-text color="primary">{{ a.abbreviation}}<br></ion-text>
+      </div>
+      <br>
+      </div>
+    <div *ngIf="isSectionVisible('preserve')">
+      <ion-text color="primary">PRESERVE</ion-text><br>
+      <ion-text *ngIf="recipeOptions.flavor" color="primary">{{ recipeOptions.flavor.abbreviation}}<br></ion-text>
+      <ion-text *ngIf="recipeOptions.texture" color="primary">{{ recipeOptions.texture.abbreviation}}<br></ion-text>
+      <ion-text *ngIf="recipeOptions.skill" color="primary">{{ recipeOptions.skill.abbreviation}}<br></ion-text>
+      <ion-text *ngIf="recipeOptions.timeframe" color="primary">{{ recipeOptions.timeframe.abbreviation}}<br></ion-text>
+      <div *ngFor="let a of recipeOptions.accommodations">
+        <ion-text color="primary">{{ a.abbreviation}}<br></ion-text>
+      </div>
+      <br>
+      </div>
   <!--</div>-->
 </div>
 

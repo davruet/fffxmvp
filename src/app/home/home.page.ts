@@ -27,6 +27,10 @@ export class HomePage implements AfterViewInit, OnInit {
       sectionService.addEventHandler((next:string)=>this.scrollToSection(next));
   }
   
+  isSectionVisible (section:string):boolean{
+    return this.sectionService.isVisible(section);
+  }
+  
   
   ngAfterViewInit() {
 
@@ -103,7 +107,7 @@ export class HomePage implements AfterViewInit, OnInit {
   
   availableIngredients: Ingredient[] = this.ingredients;
   
-  recipeOptions: AllRecipeOptions = {type: "surprise-me", ingredients: this.ingredients}
+  recipeOptions: AllRecipeOptions = {type: "surprise-me", ingredients: this.ingredients, date: new Date()}
   
   
   initParameters(params: any){
@@ -130,18 +134,19 @@ export class HomePage implements AfterViewInit, OnInit {
         foodForest: this.foodForests.find((f)=>f.name === item["FOOD FOREST"])
       }}).filter((ingredient: Ingredient)=>ingredient.foodForest);
       console.log(this.ingredients);
-    
-
     this.handleFFChange(this.foodForests);
   }
   
   onDateChange(event: any){
     console.log('Date changed to:', event.detail.value);
-    this.recipeOptions.date = new Date(event.detail.value);
-    this.refreshIngredients();
-    
+    this.setDate(new Date(event.detail.value));
   }
   
+  setDate(date: Date){
+    this.recipeOptions.date = date;
+    this.refreshIngredients(); 
+  }
+
   refreshIngredients(){
     let available: Ingredient[] = filterIngredientsByFoodForest(this.ingredients, this.foodForests);
     if (this.recipeOptions.date){
