@@ -1,0 +1,12 @@
+<div class="segment-container">
+  <ng-container *ngFor="let item of items; let i = index">
+    <ion-text 
+      [style.color]="selected === i ? 'var(--ion-color-primary)' : 'grey'"
+      (click)="selectItem(i)">
+      <h3>{{ item }}</h3>
+    </ion-text>
+    <ng-container *ngIf="i < items.length - 1">
+      <ion-text style="color: grey;"><h3>&nbsp;&nbsp;|&nbsp;&nbsp;</h3></ion-text>
+    </ng-container>
+  </ng-container>
+</div>

@@ -14,6 +14,8 @@ import { SectionService } from '../sections/section.service';
 import { ChoiceSectionComponent } from '../sections/choice-section.component';
 import { ImageGeneratorComponent } from '../image/image-generator.component';
 import { DataFetcherComponent } from '../data-fetcher.component';
+import { SimpleSegmentComponent } from '../components/simple-segment/simple-segment.component';
+
 
 @NgModule({
   imports: [
@@ -23,6 +25,6 @@ import { DataFetcherComponent } from '../data-fetcher.component';
     HomePageRoutingModule,
     HttpClientModule,
   ],
-  declarations: [HomePage, ItemListComponent, ImageAccordionComponent, SectionComponent, ChoiceSectionComponent, ImageGeneratorComponent, DataFetcherComponent]
+  declarations: [HomePage, ItemListComponent, ImageAccordionComponent, SectionComponent, ChoiceSectionComponent, ImageGeneratorComponent, DataFetcherComponent, SimpleSegmentComponent]
 })
 export class HomePageModule {}

@@ -7,10 +7,12 @@ import { Choice, SectionService } from './section.service';
       <div>
         <ng-content></ng-content>
         <br><br>
-          <ion-segment (ionChange)=onChange($event)>
+          <app-simple-segment [items]="choicesStr || []" (selectionChange)="onSelectionChange($event)"></app-simple-segment>
+
+          <!--<ion-segment (ionChange)=onChange($event)>
             <ion-segment-button *ngFor="let choice of choices" [value] = "choice.value" labelPlacement="start"><ion-text><h3>{{choice.label}}</h3></ion-text></ion-segment-button>
             <br *ngIf="choices && choices.length > 2">
-          </ion-segment>
+          </ion-segment>-->
       </div>
   `,
   styleUrls: ['choice-section.component.scss']
@@ -19,6 +21,8 @@ export class ChoiceSectionComponent implements OnInit{
   @Input() sectionID: string = "";
     
   choices : Choice[] | undefined;
+  
+  choicesStr : string[] | undefined;
 
   constructor(private sectionService: SectionService) {
 	
@@ -26,13 +30,18 @@ export class ChoiceSectionComponent implements OnInit{
   
   ngOnInit(){
     this.choices = this.sectionService.getSectionById(this.sectionID)?.choices;
+    if (this.choices) this.choicesStr = this.choices.map(c=>c.label);
     console.log(`Initialized with choices: ${this.choices}`)
   }
   
-  onChange(event: CustomEvent) {
-    console.log('Selected Value: ', event.detail.value);
-	  this.sectionService.updateVisibilityBasedOnChoice(this.sectionID, event.detail.value);
-    this.sectionService.showNextSection(this.sectionID);
+  onSelectionChange(i: number) {
+    //console.log('Selected Value: ', event.detail.value);
+	  //this.sectionService.updateVisibilityBasedOnChoice(this.sectionID, event.detail.value);
+    const value: Choice | undefined = this.choices?.[i];
+    if (value){
+      this.sectionService.updateVisibilityBasedOnChoice(this.sectionID, value.value);
+      this.sectionService.showNextSection(this.sectionID);
+    }
     // You can use event.detail.value to react to the change
     // For instance, updating your model or making API calls
   }

@@ -1,0 +1,17 @@
+.segment-container {
+	display: flex;
+	//align-items: center;
+	//justify-content: center;
+  }
+  
+  .segment-item {
+	cursor: pointer;
+	padding: 0 10px;
+	&.selected {
+	  color: var(--ion-color-primary);
+	}
+  }
+  
+  .divider {
+	color: grey;
+  }
