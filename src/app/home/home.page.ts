@@ -1,4 +1,4 @@
-import {Component, QueryList, ViewChildren, ViewChild, AfterViewInit, OnInit } from '@angular/core';
+import { Component, QueryList, ViewChildren, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { IonContent } from '@ionic/angular';
 import { AnimationController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
@@ -167,6 +167,9 @@ generateRecipe(){
   this.recipeJson = JSON.stringify(this.recipePrompt);
   console.log(this.recipeJson);
   this.dataService.generateRecipe();
+  // manually show next and scroll
+  this.stateMachine.showNextSection('generate');
+  this.scrollToSection('recipe');
 }
 
   

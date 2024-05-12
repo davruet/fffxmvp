@@ -5,16 +5,13 @@ import { Choice, SectionService } from './section.service';
 @Component({
   selector: 'app-choice-section',
   template: `
-    <app-base-section [sectionID]="sectionID" *ngIf="isVisible()" (nextSectionEvent)="nextSection($event)">
-      <div section-body>
-	   <ng-content select="[section-body]"></ng-content>
-	   <br><br>
-	  	<ion-radio-group (ionChange)=onRadioChange($event)>
-			<ion-radio *ngFor="let choice of choices" [value] = "choice.value" labelPlacement="start">{{choice.label}}</ion-radio> 
-		</ion-radio-group>
-
+      <div>
+        <ng-content></ng-content>
+        <br><br>
+          <ion-radio-group (ionChange)=onRadioChange($event)>
+            <ion-radio *ngFor="let choice of choices" [value] = "choice.value" labelPlacement="start">{{choice.label}}</ion-radio> 
+          </ion-radio-group>
       </div>
-    </app-base-section>
   `,
   styles: [`
   ion-radio {
@@ -26,6 +23,7 @@ import { Choice, SectionService } from './section.service';
 })
 export class ChoiceSectionComponent implements OnInit{
   @Input() sectionID: string = "";
+  
   @Output() nextSectionEvent = new EventEmitter<string | null>();
   
   choices : Choice[] | undefined;

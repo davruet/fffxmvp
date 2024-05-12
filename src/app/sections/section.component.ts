@@ -17,9 +17,9 @@ import { SectionObserver } from './section-observer.interface';
   template: `
   <section @fadeIn class="page" *ngIf="isVisible()">
 
-      <ng-content select="[section-body]"></ng-content> <!-- Place for subclass content -->
+      <ng-content></ng-content> <!-- Place for subclass content -->
       <br>
-      <ion-button (click)="nextSection()" fill="clear">
+      <ion-button *ngIf="showNextButton" (click)="nextSection()" fill="clear">
         <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
       </ion-button>
   
@@ -32,6 +32,8 @@ styleUrls: ['section.component.scss'],
 export class SectionComponent implements OnInit {
   
   @Input() sectionID: string = "";
+  @Input() showNextButton: boolean = true;
+
   @Output() nextSectionEvent = new EventEmitter<string | null>();
 
 
