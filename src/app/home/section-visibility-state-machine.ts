@@ -44,7 +44,7 @@ export class SectionVisibilityStateMachine {
 			'select-protein',
 			'surprise',
 			'disclaimer',
-			'generating',
+			'generate',
 			'recipe'
 			
 			

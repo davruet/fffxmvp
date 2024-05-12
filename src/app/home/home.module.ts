@@ -13,6 +13,7 @@ import { SectionComponent } from '../sections/section.component';
 import { SectionService } from '../sections/section.service';
 import { ChoiceSectionComponent } from '../sections/choice-section.component';
 import { ImageGeneratorComponent } from '../image/image-generator.component';
+import { DataFetcherComponent } from '../data-fetcher.component';
 
 @NgModule({
   imports: [
@@ -22,6 +23,6 @@ import { ImageGeneratorComponent } from '../image/image-generator.component';
     HomePageRoutingModule,
     HttpClientModule,
   ],
-  declarations: [HomePage, ItemListComponent, ImageAccordionComponent, SectionComponent, ChoiceSectionComponent, ImageGeneratorComponent]
+  declarations: [HomePage, ItemListComponent, ImageAccordionComponent, SectionComponent, ChoiceSectionComponent, ImageGeneratorComponent, DataFetcherComponent]
 })
 export class HomePageModule {}

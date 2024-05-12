@@ -1,4 +1,4 @@
-import {Component, OnChanges, QueryList, ViewChildren, ViewChild, ElementRef, AfterViewInit, OnInit, SimpleChanges } from '@angular/core';
+import {Component, QueryList, ViewChildren, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { IonContent } from '@ionic/angular';
 import { AnimationController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
@@ -7,6 +7,7 @@ import { SectionVisibilityStateMachine } from './section-visibility-state-machin
 import { SectionComponent } from '../sections/section.component';
 import { SectionService } from '../sections/section.service';
 import { SurpriseRecipe, PreservedRecipe, FreshByTypology, FreshByProduct, BasicRecipe, IngredientList, Ingredient, FoodForest, MVP, RecipeOption, PromptTemplate } from '../recipe.interfaces';
+import { DataService } from '../data.service';
 
 
 @Component({
@@ -20,8 +21,11 @@ export class HomePage implements AfterViewInit, OnInit {
   @ViewChildren(SectionComponent) sections!: QueryList<SectionComponent>;
   
   
-  constructor(private animationCtrl: AnimationController, private http: HttpClient, private stateMachine: SectionVisibilityStateMachine, private sectionService: SectionService) {
-    
+  constructor(private animationCtrl: AnimationController,
+    private http: HttpClient,
+    private stateMachine: SectionVisibilityStateMachine,
+    private sectionService: SectionService,
+    private dataService: DataService) {
   }
   
   
@@ -30,6 +34,8 @@ export class HomePage implements AfterViewInit, OnInit {
   }
   
   ngOnInit() {
+    // FIXME need to elegantly handle failure to load parameters.
+    // Also move httpclient to the dataService.
     this.http.get(environment.dataUrl).subscribe({
       next: jsonData => {
         console.log('JSON Data loaded', jsonData);
@@ -128,8 +134,6 @@ getDirectives(){
   return this.options.filter(o=>o.type == "directive")
 }
 
-
-  
 randomizeSurprise(){
   if (this.recipePrompt.type === 'surprise-me'){
     const surprise = this.recipePrompt as SurpriseRecipe;
@@ -144,11 +148,15 @@ randomizeSurprise(){
 }
 
 randomElement<T>(arg: T[]): T{
-  if (this.mvps.length === 0) {
-    throw new Error('The MVP array is empty.');
+  if (arg.length === 0) {
+    throw new Error('The array is empty.');
   }
-  const randomIndex = Math.floor(Math.random() * this.mvps.length);
+  const randomIndex = Math.floor(Math.random() * arg.length);
   return arg[randomIndex];
+}
+
+requestRecipeData(){
+  this.dataService.generateRecipe();
 }
   
 generateRecipe(){
@@ -156,29 +164,11 @@ generateRecipe(){
   if (this.recipePrompt.type === 'surprise-me'){
     this.randomizeSurprise();
   }
-  let body = JSON.stringify(this.recipePrompt);
-  console.log(body);
-  this.postRecipe(this.recipePrompt);
+  this.recipeJson = JSON.stringify(this.recipePrompt);
+  console.log(this.recipeJson);
+  this.dataService.generateRecipe();
 }
 
-postRecipe(body:any){
-  this.http.post(environment.generateUrl,
-    body
-  ).subscribe({
-    next: jsonData => {
-      console.log('JSON Data loaded', jsonData);
-      this.recipe = jsonData;
-      this.scrollToSection(this.stateMachine.showNextSection('generating'));
-    },
-     complete: ()=>{
-        this.parametersLoading = false; // Stop loading once data is received
-      },
-      error: (err) =>{
-      this.parametersLoading = false; // Stop loading on error
-      console.error('There was an error!', err);
-      }
-    })
-}
   
   /*
   private observeSections() {
@@ -195,17 +185,7 @@ postRecipe(body:any){
       observer.observe(section.nativeElement);
     });
   }
-
-  private animateSection(element: Element) {
-    console.log("Animating in " + element)
-    const animation = this.animationCtrl.create()
-      .addElement(element)
-      .duration(1000)
-      .fromTo('opacity', '0', '1');
-
-    animation.play();
-  }*/
-  
+*/
   
   scrollToSection(sectionID: string | null) {
     console.log(`scrollToSection ${sectionID}`);
@@ -219,36 +199,8 @@ postRecipe(body:any){
       }
 
     }
-    /*const currentButton = event.target as HTMLElement;
-    const currentSection = currentButton.closest('section');
-    const sectionsArray = this.sections.toArray();
-
-    const currentIndex = sectionsArray.findIndex(el => el.nativeElement === currentSection);
-    const nextIndex = currentIndex + 1;
-    const nextSection = sectionsArray[nextIndex];
-    if (nextIndex > this.visibleSectionIndex){
-      this.visibleSectionIndex = nextIndex;
-    }
-    
-
-    if (nextSection) {
-      console.log(`scrollto ${nextSection.nativeElement.offsetTop}`)
-       nextSection.nativeElement.scrollIntoView({behavior: "smooth", block:"end", inline:"nearest"});
-    }*/
     
   }
-  
-  visibleSectionIndex:number = 0;
-
-  
- 
-  
-  /*foodForests = [
-    { id: 1, name: 'Amsterdam Food', enabled: true },
-    { id: 2, name: 'Mandius Food Forest', enabled: true  },
-    { id: 3, name: 'Food Forest Pantry', enabled: true  },
-  ]*/
-
   
   
   ingredients: Ingredient[] = [
@@ -264,6 +216,8 @@ postRecipe(body:any){
     style: 'None',
     serving: 'home'
   } as SurpriseRecipe;
+  
+  recipeJson!: string;
   
   recipe!: Object;
 
