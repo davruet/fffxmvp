@@ -66,3 +66,16 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Credentials
+credentials.json
+secrets
+parameters.json
+token.json
+credentials-desktop.json
+
+# PDF doc
+*.PDF
+*.pdf
+
+*.pyc
