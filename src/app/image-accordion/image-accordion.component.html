@@ -1,5 +1,5 @@
 <ion-accordion-group>
-  <ion-accordion *ngFor="let item of items" value="{{ item.id }}<">
+  <ion-accordion *ngFor="let item of items" value="{{ item.id }}">
     <ion-item slot="header" color="light">
       <ion-toggle [(ngModel)]="item.enabled" (ionChange)="toggleItemEnabled(item, $event)"></ion-toggle>
       <ion-label color="primary">{{ item.name }}</ion-label>
