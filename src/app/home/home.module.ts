@@ -8,8 +8,9 @@ import { ImageAccordionComponent } from '../image-accordion/image-accordion.comp
 import { HttpClientModule } from '@angular/common/http';
 
 
-
 import { HomePageRoutingModule } from './home-routing.module';
+import { StartSection } from '../sections/start/start.component';
+import { SectionComponent } from '../sections/section.component';
 
 
 @NgModule({
@@ -20,6 +21,6 @@ import { HomePageRoutingModule } from './home-routing.module';
     HomePageRoutingModule,
     HttpClientModule
   ],
-  declarations: [HomePage, ItemListComponent, ImageAccordionComponent]
+  declarations: [HomePage, ItemListComponent, ImageAccordionComponent, SectionComponent, StartSection]
 })
 export class HomePageModule {}

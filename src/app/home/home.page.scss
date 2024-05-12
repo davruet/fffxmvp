@@ -10,12 +10,6 @@
   //transform: translateY(-50%);
 }
 
-section {
-  margin-left: 2em;
-  padding-top: 2em;
-  margin-right: 250px;
-}
-
 #container strong {
   font-size: 20px;
   line-height: 26px;
@@ -30,10 +24,6 @@ section {
   text-decoration: none;
 }
 
-.page {
-  height: 100vh;
-}
-
 .floating-menu {
   position:fixed;
   border:none;
@@ -41,10 +31,6 @@ section {
   z-index:100;
   top:15px;
   right:10px;
-}
-
-ion-button	{
-  --padding-start: 0px;
 }
 
 ion-toggle	{

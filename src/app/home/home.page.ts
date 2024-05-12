@@ -3,6 +3,10 @@ import { IonContent } from '@ionic/angular';
 import { AnimationController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment'; // Import environment
+import { SectionVisibilityStateMachine } from './section-visibility-state-machine';
+import { SectionComponent } from '../sections/section.component';
+import { SectionObserver } from '../sections/section-observer.interface';
+import { Subscription } from 'rxjs';
 
 
 interface FoodForest {
@@ -24,15 +28,46 @@ interface Ingredient {
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements AfterViewInit, OnInit {
-  @ViewChild(IonContent) content!: IonContent;
-  @ViewChildren('section') sections!: QueryList<ElementRef>;
 
-  constructor(private animationCtrl: AnimationController, private http: HttpClient) {}
+export class HomePage implements AfterViewInit, OnInit, SectionObserver {
+  @ViewChild(IonContent) content!: IonContent;
+  @ViewChildren(SectionComponent) sections!: QueryList<SectionComponent>;
+  
+  constructor(private animationCtrl: AnimationController, private http: HttpClient) {
+    
+  }
+  
+  private sectionSubscription!: Subscription;
+
+  
+  notifySectionChange(sectionId: string): void {    
+    const matchedSections = this.sections.filter(s=>s.sectionID === sectionId);
+    if (matchedSections.length > 0){
+      requestAnimationFrame(() => {
+        matchedSections[0].getElementRef().nativeElement.scrollIntoView({behavior: "smooth", block:"end", inline:"nearest"});
+
+      });
+    }
+  }
+  
   
   ngAfterViewInit() {
-    this.observeSections();
+    this.sectionSubscription = this.sections.changes.subscribe(() => {
+      console.log("Section change!");
+      this.subscribeToSectionChanges();
+    });
+    //this.observeSections();
+    this.subscribeToSectionChanges();
+    console.log(this.sections);
   }
+  
+  private subscribeToSectionChanges() {
+    // Reset and subscribe to new sections
+    this.sections.forEach(section => {
+      section.addObserver(this);
+    });
+  }
+
   
   ngOnInit() {
     this.http.get(environment.dataUrl).subscribe({
@@ -51,6 +86,14 @@ export class HomePage implements AfterViewInit, OnInit {
 
   }
   
+  ngOnDestroy() {
+    // Clean up the subscription
+    if (this.sectionSubscription) {
+      this.sectionSubscription.unsubscribe();
+    }
+  }
+  
+  /*
   private observeSections() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -62,7 +105,6 @@ export class HomePage implements AfterViewInit, OnInit {
     }, {threshold: 0.1});
 
     this.sections.forEach(section => {
-      section.nativeElement.style.opacity = '0'; // Set initial opacity to 0
       observer.observe(section.nativeElement);
     });
   }
@@ -75,11 +117,11 @@ export class HomePage implements AfterViewInit, OnInit {
       .fromTo('opacity', '0', '1');
 
     animation.play();
-  }
+  }*/
   
   
   scrollToNextSection(event: MouseEvent) {
-    const currentButton = event.target as HTMLElement;
+    /*const currentButton = event.target as HTMLElement;
     const currentSection = currentButton.closest('section');
     const sectionsArray = this.sections.toArray();
 
@@ -93,9 +135,8 @@ export class HomePage implements AfterViewInit, OnInit {
 
     if (nextSection) {
       console.log(`scrollto ${nextSection.nativeElement.offsetTop}`)
-      //this.content.scrollToPoint(0,nextSection.nativeElement.offsetTop,1000);
        nextSection.nativeElement.scrollIntoView({behavior: "smooth", block:"end", inline:"nearest"});
-    }
+    }*/
     
   }
   
