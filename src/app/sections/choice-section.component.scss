@@ -1,0 +1,21 @@
+
+ion-radio::part(container) {
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  width:0px;
+}
+
+ion-radio::part(label){
+  color:#999;
+}
+ion-radio.radio-checked::part(label) {
+  color:  var(--ion-color-primary);
+}
+//ion-radio::part(label){
+  /*
+  --color: red;
+  color: var(--ion-color-primary);*/
+ // color: red;
+
+//}

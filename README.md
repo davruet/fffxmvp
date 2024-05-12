@@ -103,3 +103,15 @@ gcloud secrets add-iam-policy-binding my-secret \
     --member="serviceAccount:your-cloud-run-service-account@your-project.iam.gserviceaccount.com" \
     --role="roles/secretmanager.secretAccessor"
 ```
+
+Create a bucket for file storage.
+```
+gsutil mb -l EUROPE-WEST1 gs://fffxmvp/
+gsutil defacl set public-read gs://fffxmvp
+```
+
+```
+gcloud projects add-iam-policy-binding fffxmvp \
+    --member="serviceAccount:mvpxfff@crafty-almanac-420514.iam.gserviceaccount.com" \
+    --role="roles/storage.objectCreator"
+```

@@ -1,5 +1,4 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
-import { SectionVisibilityStateMachine } from '../home/section-visibility-state-machine';
 import { Choice, SectionService } from './section.service';
 
 @Component({
@@ -9,46 +8,35 @@ import { Choice, SectionService } from './section.service';
         <ng-content></ng-content>
         <br><br>
           <ion-radio-group (ionChange)=onRadioChange($event)>
-            <ion-radio *ngFor="let choice of choices" [value] = "choice.value" labelPlacement="start">{{choice.label}}</ion-radio> 
+            <ion-radio *ngFor="let choice of choices" [value] = "choice.value" labelPlacement="start"><h3>{{choice.label}}</h3></ion-radio> 
           </ion-radio-group>
       </div>
   `,
-  styles: [`
-  ion-radio {
-	--color:transparent;
-	--color-checked: primary;
-	--width:0px
-  }
-  `]
+  styleUrls: ['choice-section.component.scss']
 })
 export class ChoiceSectionComponent implements OnInit{
   @Input() sectionID: string = "";
-  
-  @Output() nextSectionEvent = new EventEmitter<string | null>();
-  
+    
   choices : Choice[] | undefined;
 
-  constructor(private stateMachine: SectionVisibilityStateMachine, private sectionService: SectionService) {
+  constructor(private sectionService: SectionService) {
 	
   }
   
   ngOnInit(){
-	this.choices = this.sectionService.getSectionById(this.sectionID)?.choices;
-	console.log(`Initialized with choices: ${this.choices}`)
+    this.choices = this.sectionService.getSectionById(this.sectionID)?.choices;
+    console.log(`Initialized with choices: ${this.choices}`)
   }
   
   onRadioChange(event: CustomEvent) {
     console.log('Selected Value: ', event.detail.value);
-	this.stateMachine.updateVisibilityBasedOnChoice(this.sectionID, event.detail.value);
-	
+	  this.sectionService.updateVisibilityBasedOnChoice(this.sectionID, event.detail.value);
+    this.sectionService.showNextSection(this.sectionID);
     // You can use event.detail.value to react to the change
     // For instance, updating your model or making API calls
   }
   
   isVisible(): boolean{
-	return this.stateMachine.isVisible(this.sectionID);
-  }
-  nextSection(nextSectionId: string | null){
-	this.nextSectionEvent.emit(nextSectionId);
+	  return this.sectionService.isVisible(this.sectionID);
   }
 }

@@ -3,7 +3,6 @@ import { IonContent } from '@ionic/angular';
 import { AnimationController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment'; // Import environment
-import { SectionVisibilityStateMachine } from './section-visibility-state-machine';
 import { SectionComponent } from '../sections/section.component';
 import { SectionService } from '../sections/section.service';
 import { SurpriseRecipe, PreservedRecipe, FreshByTypology, FreshByProduct, BasicRecipe, IngredientList, Ingredient, FoodForest, MVP, RecipeOption, PromptTemplate } from '../recipe.interfaces';
@@ -23,9 +22,9 @@ export class HomePage implements AfterViewInit, OnInit {
   
   constructor(private animationCtrl: AnimationController,
     private http: HttpClient,
-    private stateMachine: SectionVisibilityStateMachine,
     private sectionService: SectionService,
     private dataService: DataService) {
+      sectionService.addEventHandler((next:string)=>this.scrollToSection(next));
   }
   
   
@@ -86,7 +85,6 @@ export class HomePage implements AfterViewInit, OnInit {
     );
     this.promptTemplates = params['prompt-templates'];
     this.options = params['options'];
-    console.log(this.options);
 
     this.handleFFChange(this.foodForests);
   }
@@ -168,8 +166,8 @@ generateRecipe(){
   console.log(this.recipeJson);
   this.dataService.generateRecipe();
   // manually show next and scroll
-  this.stateMachine.showNextSection('generate');
-  this.scrollToSection('recipe');
+  this.sectionService.showSection('recipe');
+  //this.scrollToSection('recipe');
 }
 
   

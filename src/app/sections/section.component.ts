@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, Output, Input, OnInit, Type, ChangeDetectorRef } from '@angular/core';
-import { SectionVisibilityStateMachine } from '../home/section-visibility-state-machine';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SectionObserver } from './section-observer.interface';
+import { SectionService } from './section.service';
 
 
 @Component({
@@ -19,7 +19,7 @@ import { SectionObserver } from './section-observer.interface';
 
       <ng-content></ng-content> <!-- Place for subclass content -->
       <br>
-      <ion-button *ngIf="showNextButton" (click)="nextSection()" fill="clear">
+      <ion-button class="section-button" *ngIf="showNextButton" (click)="nextSection()" fill="clear">
         <ion-icon aria-label="next page" slot="icon-only" name="chevron-down-outline"></ion-icon>
       </ion-button>
   
@@ -38,16 +38,18 @@ export class SectionComponent implements OnInit {
 
 
   nextSection() {
-    const nextSectionId = this.stateMachine.showNextSection(this.sectionID);
-    this.nextSectionEvent.emit(nextSectionId);
+    const nextSectionId = this.sectionService.showNextSection(this.sectionID);
+    if (nextSectionId) {
+      this.nextSectionEvent.emit(nextSectionId);
+    }
     //document.getElementById(nextSectionId)?.scrollIntoView({ behavior: 'smooth' }); FIXME
   }
   
   isVisible(): boolean {
-    return this.stateMachine.isVisible(this.sectionID);
+    return this.sectionService.isVisible(this.sectionID);
   }
 
-  constructor(private elementRef: ElementRef, private stateMachine: SectionVisibilityStateMachine) { 
+  constructor(private elementRef: ElementRef, private sectionService: SectionService) { 
   }
   
   getElementRef(): ElementRef {

@@ -1,7 +1,7 @@
 <ion-accordion-group>
   <ion-accordion *ngFor="let item of items" value="{{ item.id }}" (click)="onHeaderClicked($event)">
-    <ion-item slot="header" color="light" >
-      <ion-toggle color="primary" justify="start" [(ngModel)]="item.enabled" labelPlacement="end"><ion-text color="primary" (click)="onToggleClicked($event)">{{ item.name }}</ion-text></ion-toggle>
+    <ion-item slot="header" color="primary-contrast" >
+      <ion-toggle color="primary" justify="start" [(ngModel)]="item.enabled" labelPlacement="end"><ion-text color="primary" (click)="onToggleClicked($event)"><h3>{{ item.name }}</h3></ion-text></ion-toggle>
     </ion-item>
     <div class="ion-padding" slot="content"><ion-text color="primary">{{ item.description }}</ion-text></div>
   </ion-accordion>

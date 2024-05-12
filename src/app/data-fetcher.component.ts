@@ -19,7 +19,6 @@ export class DataFetcherComponent implements OnInit {
       this.dataStream = ''; // clear old recipe.
       this.dataService.postRecipe(this.requestObject).subscribe({
         next: partialHTML => {
-          console.log(partialHTML);
           this.dataStream += partialHTML;
         },
         error: (error) => console.error('Error fetching data:', error),
