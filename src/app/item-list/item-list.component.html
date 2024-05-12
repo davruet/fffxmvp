@@ -1,6 +1,6 @@
 <ion-list class="item-list">
   <ion-item *ngFor="let item of items">
-    <ion-toggle [(ngModel)]="item.enabled"></ion-toggle>
+    <ion-toggle [(ngModel)]="item.enabled" (ngModelChange)="onToggleChange(item)"></ion-toggle>
     <ion-label color="primary">{{ item.name }}</ion-label>
   </ion-item>
 </ion-list>

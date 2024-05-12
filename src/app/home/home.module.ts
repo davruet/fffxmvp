@@ -9,9 +9,9 @@ import { HttpClientModule } from '@angular/common/http';
 
 
 import { HomePageRoutingModule } from './home-routing.module';
-import { StartSection } from '../sections/start/start.component';
 import { SectionComponent } from '../sections/section.component';
-
+import { SectionService } from '../sections/section.service';
+import { ChoiceSectionComponent } from '../sections/choice-section.component';
 
 @NgModule({
   imports: [
@@ -19,8 +19,8 @@ import { SectionComponent } from '../sections/section.component';
     FormsModule,
     IonicModule,
     HomePageRoutingModule,
-    HttpClientModule
+    HttpClientModule,
   ],
-  declarations: [HomePage, ItemListComponent, ImageAccordionComponent, SectionComponent, StartSection]
+  declarations: [HomePage, ItemListComponent, ImageAccordionComponent, SectionComponent, ChoiceSectionComponent]
 })
 export class HomePageModule {}

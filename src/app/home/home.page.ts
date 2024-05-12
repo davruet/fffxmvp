@@ -1,12 +1,11 @@
-import {Component, QueryList, ViewChildren, ViewChild, ElementRef, AfterViewInit, OnInit } from '@angular/core';
+import {Component, OnChanges, QueryList, ViewChildren, ViewChild, ElementRef, AfterViewInit, OnInit, SimpleChanges } from '@angular/core';
 import { IonContent } from '@ionic/angular';
 import { AnimationController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment'; // Import environment
 import { SectionVisibilityStateMachine } from './section-visibility-state-machine';
 import { SectionComponent } from '../sections/section.component';
-import { SectionObserver } from '../sections/section-observer.interface';
-import { Subscription } from 'rxjs';
+import { SectionService } from '../sections/section.service';
 
 
 interface FoodForest {
@@ -29,44 +28,20 @@ interface Ingredient {
   styleUrls: ['home.page.scss'],
 })
 
-export class HomePage implements AfterViewInit, OnInit, SectionObserver {
+export class HomePage implements AfterViewInit, OnInit {
   @ViewChild(IonContent) content!: IonContent;
   @ViewChildren(SectionComponent) sections!: QueryList<SectionComponent>;
   
-  constructor(private animationCtrl: AnimationController, private http: HttpClient) {
+  
+  constructor(private animationCtrl: AnimationController, private http: HttpClient, private stateMachine: SectionVisibilityStateMachine, private sectionService: SectionService) {
     
-  }
-  
-  private sectionSubscription!: Subscription;
-
-  
-  notifySectionChange(sectionId: string): void {    
-    const matchedSections = this.sections.filter(s=>s.sectionID === sectionId);
-    if (matchedSections.length > 0){
-      requestAnimationFrame(() => {
-        matchedSections[0].getElementRef().nativeElement.scrollIntoView({behavior: "smooth", block:"end", inline:"nearest"});
-
-      });
-    }
   }
   
   
   ngAfterViewInit() {
-    this.sectionSubscription = this.sections.changes.subscribe(() => {
-      console.log("Section change!");
-      this.subscribeToSectionChanges();
-    });
-    //this.observeSections();
-    this.subscribeToSectionChanges();
-    console.log(this.sections);
+
   }
   
-  private subscribeToSectionChanges() {
-    // Reset and subscribe to new sections
-    this.sections.forEach(section => {
-      section.addObserver(this);
-    });
-  }
 
   
   ngOnInit() {
@@ -87,11 +62,50 @@ export class HomePage implements AfterViewInit, OnInit, SectionObserver {
   }
   
   ngOnDestroy() {
-    // Clean up the subscription
-    if (this.sectionSubscription) {
-      this.sectionSubscription.unsubscribe();
-    }
+
   }
+  
+  handleFFChange(updatedItems: any){
+    console.log(`changes ${updatedItems}`); // FIXME THIS IS NOT WORKING
+    console.log("food forests change!");
+    let validForests = this.foodForests.filter(f=>f.enabled).map(f=>f.name);
+    console.log(validForests);
+    this.ingredients = this.parameters["Food Forest Ingredient"]
+      .filter((i:any)=>validForests.includes(i["FOOD FOREST"]))
+      .map((item:any, index: number) => {
+        return {
+        id: index + 1, // Assuming ID starts from 1 and increments
+        name: item["ABREVIATION (20-25 ch)"], 
+        enabled: false,
+        //available: index < 5 // FIXME
+      }});
+      console.log(this.ingredients);
+      //this.ingredients.splice(5);
+    
+  }
+  
+  
+generateRecipe(){
+  console.log("GENERATING");
+  let body = {prompt: "Write a poem called 'HELLO WORLD.'"};
+  this.http.post(environment.generateUrl,
+    body
+  ).subscribe({
+    next: jsonData => {
+      console.log('JSON Data loaded', jsonData);
+      this.recipe = jsonData;
+      ;
+      this.scrollToSection(this.stateMachine.showNextSection('generating'));
+    },
+     complete: ()=>{
+        this.parametersLoading = false; // Stop loading once data is received
+      },
+      error: (err) =>{
+      this.parametersLoading = false; // Stop loading on error
+      console.error('There was an error!', err);
+      }
+    })
+}
   
   /*
   private observeSections() {
@@ -120,7 +134,18 @@ export class HomePage implements AfterViewInit, OnInit, SectionObserver {
   }*/
   
   
-  scrollToNextSection(event: MouseEvent) {
+  scrollToSection(sectionID: string | null) {
+    console.log(`scrollToSection ${sectionID}`);
+    if (sectionID){
+      const child = this.sections.find(section=>section.sectionID === sectionID);
+      if (child){
+        setTimeout(() => {
+          child.getElementRef().nativeElement.scrollIntoView({ behavior: 'smooth' });
+        }, 500); // 1000 milliseconds = 1 second
+        
+      }
+
+    }
     /*const currentButton = event.target as HTMLElement;
     const currentSection = currentButton.closest('section');
     const sectionsArray = this.sections.toArray();
@@ -154,14 +179,7 @@ export class HomePage implements AfterViewInit, OnInit, SectionObserver {
         name: item["NAME of FF (public)"], // Using the public name as 'name'
         enabled: true // Setting 'enabled' to true for all items
       }});
-    this.ingredients = params["Food Forest Ingredient"].map((item:any, index: number) => {
-      return {
-      id: index + 1, // Assuming ID starts from 1 and increments
-      name: item["ABREVIATION (20-25 ch)"], 
-      enabled: false,
-      available: index < 5 // FIXME
-    }});
-    this.ingredients.splice(5);
+    this.handleFFChange(this.foodForests);
   }
   
   /*foodForests = [
@@ -181,6 +199,8 @@ export class HomePage implements AfterViewInit, OnInit, SectionObserver {
   eatOrPreserve!: string;
   protein!: string;
   proceed!: string;
+  
+  recipe!: Object;
 
   
 isValidDate = (dateString: string) => {
