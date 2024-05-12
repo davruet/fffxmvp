@@ -1,4 +1,4 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 
 @Component({
   selector: 'image-accordion',
@@ -8,6 +8,7 @@ import { Component, OnInit, Input} from '@angular/core';
 export class ImageAccordionComponent  implements OnInit {
   
   @Input() items: any[] = [];
+  @Output() changeDetected = new EventEmitter<any[]>();
 
 
   constructor() { }
@@ -18,6 +19,11 @@ export class ImageAccordionComponent  implements OnInit {
     event.stopPropagation();
     item.enabled = !item.enabled;
     console.log(`Task ${item.name} completion status: ${item.enabled}`);
+  }
+
+  onToggleChange(item: any): void {
+    console.log(`Item ${item.name} enabled status: ${item.enabled}`);
+    this.changeDetected.emit(this.items);  // Emitting the item that was changed
   }
 
 

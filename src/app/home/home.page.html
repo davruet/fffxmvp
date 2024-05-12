@@ -66,7 +66,7 @@ Let’s get started.
       Explore the ingredients and edit your list below.
     </ion-text>
     
-      <image-accordion [items]="ingredients"></image-accordion>
+      <image-accordion [items]="ingredients" (changeDetected)="handleIngredientsChange($event)"></image-accordion>
     </div>
     </app-base-section>
     
@@ -147,8 +147,10 @@ Let’s get started.
     </app-base-section>
     
     <app-base-section [sectionID]="'recipe'">
-        <ion-text section-body color="primary">
+        <ion-text section-body class="recipe-text">
+          <pre class="recipe-text">
          {{recipe}}
+        </pre>
       </ion-text>
     </app-base-section>
     
