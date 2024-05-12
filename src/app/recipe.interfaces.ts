@@ -5,6 +5,21 @@ export interface FoodForest {
 	enabled: boolean;
   }
   
+
+  export interface RecipeOption {
+	id: number;
+	type: string;
+	name: string;
+	prompt: string;
+	abbreviation: string;
+	enabled: boolean;
+  }
+  
+ export interface PromptTemplate {
+	type: string;
+	prompt: string;
+  }
+  
 export interface Ingredient {
 	id: number;
 	name: string;

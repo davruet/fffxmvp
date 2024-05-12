@@ -28,8 +28,7 @@ def get_credentials():
     return creds
 
 
-def extract_spreadsheet_data(spreadsheet_id):
-    creds = get_credentials()
+def extract_spreadsheet_data(creds, spreadsheet_id):
     service = build('sheets', 'v4', credentials=creds)
 
     # Retrieve the list of sheets in the spreadsheet.
@@ -70,7 +69,7 @@ def extract_spreadsheet_data(spreadsheet_id):
 
 def main():
     spreadsheet_id = 'your-spreadsheet-id-here'
-    data = extract_spreadsheet_data(spreadsheet_id)
+    data = extract_spreadsheet_data(get_credentials(), spreadsheet_id)
     with open('spreadsheet_data.json', 'w') as f:
         json.dump(data, f, indent=4)
 

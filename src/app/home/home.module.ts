@@ -12,6 +12,7 @@ import { HomePageRoutingModule } from './home-routing.module';
 import { SectionComponent } from '../sections/section.component';
 import { SectionService } from '../sections/section.service';
 import { ChoiceSectionComponent } from '../sections/choice-section.component';
+import { ImageGeneratorComponent } from '../image/image-generator.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,6 @@ import { ChoiceSectionComponent } from '../sections/choice-section.component';
     HomePageRoutingModule,
     HttpClientModule,
   ],
-  declarations: [HomePage, ItemListComponent, ImageAccordionComponent, SectionComponent, ChoiceSectionComponent]
+  declarations: [HomePage, ItemListComponent, ImageAccordionComponent, SectionComponent, ChoiceSectionComponent, ImageGeneratorComponent]
 })
 export class HomePageModule {}

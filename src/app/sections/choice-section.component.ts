@@ -8,6 +8,7 @@ import { Choice, SectionService } from './section.service';
     <app-base-section [sectionID]="sectionID" *ngIf="isVisible()" (nextSectionEvent)="nextSection($event)">
       <div section-body>
 	   <ng-content select="[section-body]"></ng-content>
+	   <br><br>
 	  	<ion-radio-group (ionChange)=onRadioChange($event)>
 			<ion-radio *ngFor="let choice of choices" [value] = "choice.value" labelPlacement="start">{{choice.label}}</ion-radio> 
 		</ion-radio-group>

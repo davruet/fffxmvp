@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment'; // Import environm
 import { SectionVisibilityStateMachine } from './section-visibility-state-machine';
 import { SectionComponent } from '../sections/section.component';
 import { SectionService } from '../sections/section.service';
-import { SurpriseRecipe, PreservedRecipe, FreshByTypology, FreshByProduct, BasicRecipe, IngredientList, Ingredient, FoodForest, MVP } from '../recipe.interfaces';
+import { SurpriseRecipe, PreservedRecipe, FreshByTypology, FreshByProduct, BasicRecipe, IngredientList, Ingredient, FoodForest, MVP, RecipeOption, PromptTemplate } from '../recipe.interfaces';
 
 
 @Component({
@@ -50,6 +50,41 @@ export class HomePage implements AfterViewInit, OnInit {
 
   }
   
+  parameters: any;
+  parametersLoading: boolean = true;
+  
+  foodForests: FoodForest[]= [];
+  
+  mvps: MVP[] = [];
+  
+  promptTemplates: PromptTemplate[] = [];
+  
+  options: RecipeOption[] = [];
+  
+  initParameters(params: any){
+    this.parameters = params;
+    this.foodForests = params["Food Forests"].map((item:any, index: number) => {
+        return {
+        id: index + 1, // Assuming ID starts from 1 and increments
+        name: item["NAME of FF (public)"], // Using the public name as 'name'
+        enabled: true // Setting 'enabled' to true for all items
+      }});
+    this.mvps = params["MVPs"].map((data:any, index:number) =>
+      ({
+        productName: data["PRODUCT NAME"],
+        companyName: data["COMPANY NAME"],
+        linkToInfo: data["LINK TO INFO"],
+        mvpCategory: data["MVP CATEGORY"],
+        abbreviation: data["ABBREVIATION"]
+      })
+    );
+    this.promptTemplates = params['prompt-templates'];
+    this.options = params['options'];
+    console.log(this.options);
+
+    this.handleFFChange(this.foodForests);
+  }
+  
   handleFFChange(updatedItems: any[]){
     console.log(`changes ${updatedItems}`); // FIXME THIS IS NOT WORKING
     console.log("food forests change!");
@@ -74,30 +109,46 @@ export class HomePage implements AfterViewInit, OnInit {
       this.handleIngredientsChange(this.ingredients);
   }
   
-  handleIngredientsChange(updatedItems: any){
+handleIngredientsChange(updatedItems: any){
     const filteredIngredients = (updatedItems as Ingredient[]).filter(i=>i.enabled);
     const ingredientStrings = filteredIngredients.map(i=>i.name);
     this.recipePrompt.ingredients = ingredientStrings;
     console.log(`ingredients change ${filteredIngredients}`);
   }
+
+getServingStyles(){
+  return this.options.filter(o=>o.type == "serving")
+}
+
+getCulinaryStyles(){
+  return this.options.filter(o=>o.type == "culinary-style")
+}
+
+getDirectives(){
+  return this.options.filter(o=>o.type == "directive")
+}
+
+
   
 randomizeSurprise(){
   if (this.recipePrompt.type === 'surprise-me'){
     const surprise = this.recipePrompt as SurpriseRecipe;
-    surprise.mvp = this.randomMVP().abbreviation;
-    surprise.serving = "family style and be eaten communally";
-    surprise.style = "a Northern European recipe that was cooked before the Columbian Exchange"
-    surprise.directive = "be zero waste no matter how labor intensive that is";
+    const mvp: MVP = this.randomElement(this.mvps);
+    console.log(mvp);
+    surprise.mvp = `${mvp.productName} by ${mvp.companyName}`;
+    surprise.serving = this.randomElement(this.getServingStyles()).prompt;
+    surprise.style = this.randomElement(this.getCulinaryStyles()).prompt;
+    surprise.directive = this.randomElement(this.getDirectives()).prompt;
   }
   
 }
 
-randomMVP(): MVP{
+randomElement<T>(arg: T[]): T{
   if (this.mvps.length === 0) {
     throw new Error('The MVP array is empty.');
   }
   const randomIndex = Math.floor(Math.random() * this.mvps.length);
-  return this.mvps[randomIndex];
+  return arg[randomIndex];
 }
   
 generateRecipe(){
@@ -190,41 +241,15 @@ postRecipe(body:any){
   visibleSectionIndex:number = 0;
 
   
-  parameters: any;
-  parametersLoading: boolean = true;
-  
-  initParameters(params: any){
-    this.parameters = params;
-    this.foodForests = params["Food Forests"].map((item:any, index: number) => {
-        return {
-        id: index + 1, // Assuming ID starts from 1 and increments
-        name: item["NAME of FF (public)"], // Using the public name as 'name'
-        enabled: true // Setting 'enabled' to true for all items
-      }});
-    this.mvps = params["MVPs"].map((data:any, index:number) =>
-      ({
-        productName: data.PRODUCT_NAME,
-        companyName: data.COMPANY_NAME,
-        linkToInfo: data.LINK_TO_INFO,
-        mvpCategory: data.MVP_CATEGORY,
-        abbreviation: data.ABBREVIATION
-      })
-    );
-    //this.culinaryStyles = params["FRESH BY PRODUCT Prompts"]. // FIXME this should be extracted in the parameters mode.
-    //  .map((data:any, index:number) =>)
-    //this.servings = 
-    //this.directives = 
-    this.handleFFChange(this.foodForests);
-  }
+ 
   
   /*foodForests = [
     { id: 1, name: 'Amsterdam Food', enabled: true },
     { id: 2, name: 'Mandius Food Forest', enabled: true  },
     { id: 3, name: 'Food Forest Pantry', enabled: true  },
   ]*/
-  foodForests: FoodForest[]= [];
+
   
-  mvps: MVP[] = [];
   
   ingredients: Ingredient[] = [
     { id: 1, name: 'Yarrow', enabled: true, available:true, description:"" },
