@@ -1,20 +1,54 @@
-import {Component, QueryList, ViewChildren, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {Component, QueryList, ViewChildren, ViewChild, ElementRef, AfterViewInit, OnInit } from '@angular/core';
 import { IonContent } from '@ionic/angular';
 import { AnimationController } from '@ionic/angular';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment'; // Import environment
+
+
+interface FoodForest {
+  id: number;
+  name: string;
+  enabled: boolean;
+}
+
+interface Ingredient {
+  id: number;
+  name: string;
+  enabled: boolean; // rename to selected
+  available: boolean;
+}
+
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements AfterViewInit {
+export class HomePage implements AfterViewInit, OnInit {
   @ViewChild(IonContent) content!: IonContent;
   @ViewChildren('section') sections!: QueryList<ElementRef>;
 
-  constructor(private animationCtrl: AnimationController) {}
+  constructor(private animationCtrl: AnimationController, private http: HttpClient) {}
   
   ngAfterViewInit() {
     this.observeSections();
+  }
+  
+  ngOnInit() {
+    this.http.get(environment.dataUrl).subscribe({
+      next: jsonData => {
+        console.log('JSON Data loaded', jsonData);
+        this.initParameters(jsonData);
+      },
+       complete: ()=>{
+          this.parametersLoading = false; // Stop loading once data is received
+        },
+        error: (err) =>{
+        this.parametersLoading = false; // Stop loading on error
+        console.error('There was an error!', err);
+        }
+      })
+
   }
   
   private observeSections() {
@@ -50,7 +84,12 @@ export class HomePage implements AfterViewInit {
     const sectionsArray = this.sections.toArray();
 
     const currentIndex = sectionsArray.findIndex(el => el.nativeElement === currentSection);
-    const nextSection = sectionsArray[currentIndex + 1];
+    const nextIndex = currentIndex + 1;
+    const nextSection = sectionsArray[nextIndex];
+    if (nextIndex > this.visibleSectionIndex){
+      this.visibleSectionIndex = nextIndex;
+    }
+    
 
     if (nextSection) {
       console.log(`scrollto ${nextSection.nativeElement.offsetTop}`)
@@ -59,16 +98,42 @@ export class HomePage implements AfterViewInit {
     }
     
   }
-  foodForests = [
+  
+  visibleSectionIndex:number = 0;
+
+  
+  parameters: any;
+  parametersLoading: boolean = true;
+  
+  initParameters(params: any){
+    this.parameters = params;
+    this.foodForests = params["Food Forests"].map((item:any, index: number) => {
+        return {
+        id: index + 1, // Assuming ID starts from 1 and increments
+        name: item["NAME of FF (public)"], // Using the public name as 'name'
+        enabled: true // Setting 'enabled' to true for all items
+      }});
+    this.ingredients = params["Food Forest Ingredient"].map((item:any, index: number) => {
+      return {
+      id: index + 1, // Assuming ID starts from 1 and increments
+      name: item["ABREVIATION (20-25 ch)"], 
+      enabled: false,
+      available: index < 5 // FIXME
+    }});
+    this.ingredients.splice(5);
+  }
+  
+  /*foodForests = [
     { id: 1, name: 'Amsterdam Food', enabled: true },
     { id: 2, name: 'Mandius Food Forest', enabled: true  },
     { id: 3, name: 'Food Forest Pantry', enabled: true  },
-  ]
+  ]*/
+  foodForests: FoodForest[]= [];
   
-  ingredients = [
-    { id: 1, name: 'Yarrow', enabled: true },
-    { id: 2, name: 'Sweet Chestnut', enabled: true  },
-    { id: 3, name: 'Daylillies', enabled: true  },
+  ingredients: Ingredient[] = [
+    { id: 1, name: 'Yarrow', enabled: true, available:true },
+    { id: 2, name: 'Sweet Chestnut', enabled: true , available:true },
+    { id: 3, name: 'Daylillies', enabled: true , available:true },
   ]
   
   customizeOrSurprise!: string;
