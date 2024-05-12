@@ -3,6 +3,6 @@
     <ion-item slot="header" color="light" >
       <ion-toggle color="primary" justify="start" [(ngModel)]="item.enabled" labelPlacement="end"><ion-text color="primary" (click)="onToggleClicked($event)">{{ item.name }}</ion-text></ion-toggle>
     </ion-item>
-    <div class="ion-padding" slot="content">{{ item.description }}</div>
+    <div class="ion-padding" slot="content"><ion-text color="primary">{{ item.description }}</ion-text></div>
   </ion-accordion>
 </ion-accordion-group>  
