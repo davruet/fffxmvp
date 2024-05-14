@@ -21,8 +21,10 @@
   border:none;
   width:200px;
   z-index:100;
-  top:15px;
+  top:0px;
   right:10px;
+  background-color: #fffa;
+  padding: 1rem;
 }
 
 .radio-wrapper {
@@ -34,7 +36,7 @@
 }
 
 .recipe-text {
-  font-size: .9em;
+  font-size: .9rem;
   white-space: pre-wrap; /* Ensures the text wraps if needed */
   word-break: break-word; /* Prevents overflow by breaking long words */
   font-family: serif;
@@ -49,4 +51,10 @@ ion-select {
   display: inline-block;  /* Makes the select element inline */
   width: auto;            /* Adjust width as needed */
   //vertical-align: middle; /* Aligns vertically if in line with other elements */
+}
+
+video {
+  margin-left:  0px;
+  display: block;
+  width: calc(100vw - 6rem);
 }

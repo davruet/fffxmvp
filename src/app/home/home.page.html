@@ -19,6 +19,7 @@
 
 <div class="floating-menu">
   <ion-menu-button></ion-menu-button>
+  <br>
   <!--<div *ngIf="visibleSectionIndex >= 1">--> <!-- FIXME is this working? Probably broken with new state manager-->
   <div *ngIf="isSectionVisible('select-food-forest')"> 
   <ion-text color="primary">SOURCES</ion-text>
@@ -91,6 +92,9 @@ Let’s get started.</h3>
     <ion-text color="secondary">
       <h4>Whenever you are ready to continue, simply click the down arrow.</h4>
     </ion-text>
+    <video autoplay loop muted playsinline>
+      <source src="https://storage.googleapis.com/fffxmvp/images/1-LandscapeScale.webm" type="video/webm">
+    </video>
   </app-base-section>
   
   <app-base-section [sectionID]="'select-food-forest'" >
@@ -99,202 +103,224 @@ Let’s get started.</h3>
       Choose where you will get your ingredients from:<br></h3>
       <item-list [items]="foodForests" (changeDetected)="handleFFChange($event)"></item-list>
     </ion-text>
+    <video autoplay loop muted playsinline>
+      <source src="https://storage.googleapis.com/fffxmvp/images/2-FFFs.webm" type="video/webm">
+    </video>
   </app-base-section>
+  
  
-    <app-base-section [sectionID]="'select-date'" >
-      <div section-body>
-      <ion-text  color="primary">
-        <h3>Now, to find out which ingredients are available, let me know what date you would like to cook:<br></h3>
+  <app-base-section [sectionID]="'select-date'" >
+    <div section-body>
+    <ion-text  color="primary">
+      <h3>Now, to find out which ingredients are available, let me know what date you would like to cook:<br></h3>
 
+  </ion-text>
+  <ion-datetime color="primary-contrast" (ionChange)="onDateChange($event)" yearValues="2024,2025" presentation="date" [preferWheel]="true"></ion-datetime>
+  </div>
+  </app-base-section>
+  
+  
+  <app-base-section [sectionID]="'select-ingredients'" >
+    <div section-body >
+    <ion-text color="primary">
+      <h3>Got it.<br><br>Here is a list of food forest ingredients available that week.<br><br>
+    Explore the ingredients and edit your list below.</h3>
+  </ion-text>
+  
+    <image-accordion [items]="availableIngredients" (changeDetected)="handleIngredientsChange($event)"></image-accordion>
+  </div>
+  </app-base-section>
+  
+  <app-base-section [sectionID]="'customise-or-surprise'" >
+    <app-choice-section [sectionID]="'customise-or-surprise'">
+    <ion-text color="primary">
+      <h3>Great!<br><br>
+    Do you want to customise and shape your recipe further, or do you want to skip that step to generate a recipe now and be surprised?</h3>
+  </ion-text>
+  </app-choice-section>
+  </app-base-section>
+    
+  <app-base-section [sectionID]="'eat-or-preserve'" >
+    <app-choice-section [sectionID]="'eat-or-preserve'">
+    <ion-text section-body color="primary">
+      <h3>Wonderful!<br><br>
+      Now let’s shape your recipe.<br><br>
+      First, do you want to eat your recipe right away or preserve something for the future?<br></h3>
     </ion-text>
-    <ion-datetime color="primary-contrast" (ionChange)="onDateChange($event)" yearValues="2024,2025" presentation="date" [preferWheel]="true"></ion-datetime>
-    </div>
-    </app-base-section>
-    
-    
-    <app-base-section [sectionID]="'select-ingredients'" >
-      <div section-body >
-      <ion-text color="primary">
-        <h3>Got it.<br><br>Here is a list of food forest ingredients available that week.<br><br>
-      Explore the ingredients and edit your list below.</h3>
+    <video autoplay loop muted playsinline>
+      <source src="https://storage.googleapis.com/fffxmvp/images/3-PlateScale.webm" type="video/webm">
+    </video>
+  </app-choice-section>
+  </app-base-section>
+
+  <app-base-section [sectionID]="'specify-protein'" >
+    <app-choice-section [sectionID]="'specify-protein'">
+  <ion-text section-body color="primary">
+    <h3>Fantastic!<br><br>
+    Before you customise your recipe, do you want to select a specific alternative protein product?</h3>
     </ion-text>
-    
-      <image-accordion [items]="availableIngredients" (changeDetected)="handleIngredientsChange($event)"></image-accordion>
-    </div>
-    </app-base-section>
-    
-    <app-base-section [sectionID]="'customise-or-surprise'" >
-      <app-choice-section [sectionID]="'customise-or-surprise'">
-      <ion-text color="primary">
-        <h3>Great!<br><br>
-      Do you want to customise and shape your recipe further, or do you want to skip that step to generate a recipe now and be surprised?</h3>
-    </ion-text>
-    </app-choice-section>
-    </app-base-section>
-    
-      <app-base-section [sectionID]="'eat-or-preserve'" >
-        <app-choice-section [sectionID]="'eat-or-preserve'">
-        <ion-text section-body color="primary">
-          <h3>Wonderful!<br><br>
-          Now let’s shape your recipe.<br><br>
-          First, do you want to eat your recipe right away or preserve something for the future?<br></h3>
-        </ion-text>
-      </app-choice-section>
-      </app-base-section>
-    
-      <app-base-section [sectionID]="'specify-protein'" >
-        <app-choice-section [sectionID]="'specify-protein'">
-      <ion-text section-body color="primary">
-        <h3>Fantastic!<br><br>
-        Before you customise your recipe, do you want to select a specific alternative protein product?</h3>
-       </ion-text>
-      </app-choice-section>
-      </app-base-section>
+    <video autoplay loop muted playsinline>
+      <source src="https://storage.googleapis.com/fffxmvp/images/4-MVPs.webm" type="video/webm">
+    </video>
+  </app-choice-section>
+  </app-base-section>
       
     
-      <app-base-section [sectionID]="'typology'" [disableButtonFunction]="shouldDisableTypologyButton" >
-      <ion-text section-body color="primary">
-        <h3>No problem.<br><br>
-          You chose the food forest ingredients and I'll choose the alternative protein. Help fill out the following text to create your delicious recipe:<br><br>
-          I want to make <ion-select [(ngModel)]="recipeOptions.typology" interface="popover" placeholder="type" ><ion-select-option *ngFor="let item of filterOptions(this.options,'typology')" [value]="item">{{item.name}}</ion-select-option></ion-select>
-          in the culinary style of <ion-select [(ngModel)]="recipeOptions.culinaryStyle" interface="popover" placeholder="style" ><ion-select-option *ngFor="let item of filterOptions(this.options,'culinary-style')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
-          My recipe should be served <ion-select [(ngModel)]="recipeOptions.servingStyle" interface="popover" placeholder="serving" ><ion-select-option *ngFor="let item of filterOptions(this.options, 'serving')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
-          The recipe must <ion-select [(ngModel)]="recipeOptions.directive" interface="popover" placeholder="requirement" ><ion-select-option *ngFor="let item of filterOptions(this.options,'directive')" [value]="item">{{item.name}}</ion-select-option></ion-select>
-          and accommodate <ion-select [multiple]="true" [(ngModel)]="recipeOptions.accommodations" interface="popover" placeholder="acommmodations" ><ion-select-option *ngFor="let item of filterOptions(this.options,'accommodations')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
-        </h3>
-    </ion-text>
-  </app-base-section>
-    
-      <app-base-section [sectionID]="'mvp'" [disableButtonFunction]="shouldDisableMVPButton" >
-      <ion-text section-body color="primary">
-        <h3>Splendid.<br><br>
-        Using the food forest ingredients plus an alternative protein of your choice, let's generate a delicious recipe for you to cook. Help fill out the following text to create your recipe:
-        
-        I want to use <ion-select [(ngModel)]="recipeOptions.mvp" interface="popover" placeholder="mvp" ><ion-select-option *ngFor="let item of mvps" [value]="item">{{item.name}}</ion-select-option></ion-select>
+  <app-base-section [sectionID]="'typology'" [disableButtonFunction]="shouldDisableTypologyButton" >
+    <ion-text section-body color="primary">
+      <h3>No problem.<br><br>
+        You chose the food forest ingredients and I'll choose the alternative protein. Help fill out the following text to create your delicious recipe:<br><br>
+        I want to make <ion-select [(ngModel)]="recipeOptions.typology" interface="popover" placeholder="type" ><ion-select-option *ngFor="let item of filterOptions(this.options,'typology')" [value]="item">{{item.name}}</ion-select-option></ion-select>
         in the culinary style of <ion-select [(ngModel)]="recipeOptions.culinaryStyle" interface="popover" placeholder="style" ><ion-select-option *ngFor="let item of filterOptions(this.options,'culinary-style')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
         My recipe should be served <ion-select [(ngModel)]="recipeOptions.servingStyle" interface="popover" placeholder="serving" ><ion-select-option *ngFor="let item of filterOptions(this.options, 'serving')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
         The recipe must <ion-select [(ngModel)]="recipeOptions.directive" interface="popover" placeholder="requirement" ><ion-select-option *ngFor="let item of filterOptions(this.options,'directive')" [value]="item">{{item.name}}</ion-select-option></ion-select>
         and accommodate <ion-select [multiple]="true" [(ngModel)]="recipeOptions.accommodations" interface="popover" placeholder="acommmodations" ><ion-select-option *ngFor="let item of filterOptions(this.options,'accommodations')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
-        </h3>
-      </ion-text>    
-      </app-base-section>
-    
-    
-      <app-base-section [sectionID]="'preserve'" [disableButtonFunction]="shouldDisablePreservedButton" >
-      <ion-text section-body color="primary">
-        <h3>Perfect.<br><br>
-          <h3>
-          Using those food forest ingredients, let's generate a delicious recipe that can be paired with an alternative protein at a later date. Help fill out the following text to create your recipe:</h3><br><br>
-          I want to make a recipe that is <ion-select [(ngModel)]="recipeOptions.flavor" interface="popover" placeholder="flavour" ><ion-select-option *ngFor="let item of filterOptions(this.options,'flavor')" [value]="item">{{item.name}}</ion-select-option></ion-select>
-          and <ion-select [(ngModel)]="recipeOptions.texture" interface="popover" placeholder="texture" ><ion-select-option *ngFor="let item of filterOptions(this.options,'texture')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
-          The recipe should be for <ion-select [(ngModel)]="recipeOptions.skill" interface="popover" placeholder="chef" ><ion-select-option *ngFor="let item of filterOptions(this.options, 'skill')" [value]="item">{{item.name}}</ion-select-option></ion-select>
-          to make and can be eaten after <ion-select [(ngModel)]="recipeOptions.timeframe" interface="popover" placeholder="timeframe" ><ion-select-option *ngFor="let item of filterOptions(this.options,'timeframe')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
-          The recipe must accommodate <ion-select [multiple]="true" [(ngModel)]="recipeOptions.accommodations" interface="popover" placeholder="acommmodations" ><ion-select-option *ngFor="let item of filterOptions(this.options,'accommodations')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
-        </h3>
-       </ion-text>
-      </app-base-section>
-    
-    <!-- Surprise me path-->
-    <app-base-section [sectionID]="'surprise-me'" >
-      <ion-text section-body color="primary">
-        <h3>Fun!<br><br>
-        Using your food forest ingredients list, let's generate a delicious recipe for you to cook.</h3>
+      </h3>
     </ion-text>
+    <video autoplay loop muted playsinline>
+      <source src="https://storage.googleapis.com/fffxmvp/images/5-ProductionScale.webm" type="video/webm">
+    </video>
+  </app-base-section>
+    
+  <app-base-section [sectionID]="'mvp'" [disableButtonFunction]="shouldDisableMVPButton" >
+  <ion-text section-body color="primary">
+    <h3>Splendid.<br><br>
+    Using the food forest ingredients plus an alternative protein of your choice, let's generate a delicious recipe for you to cook. Help fill out the following text to create your recipe:
+    
+    I want to use <ion-select [(ngModel)]="recipeOptions.mvp" interface="popover" placeholder="mvp" ><ion-select-option *ngFor="let item of mvps" [value]="item">{{item.name}}</ion-select-option></ion-select>
+    in the culinary style of <ion-select [(ngModel)]="recipeOptions.culinaryStyle" interface="popover" placeholder="style" ><ion-select-option *ngFor="let item of filterOptions(this.options,'culinary-style')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
+    My recipe should be served <ion-select [(ngModel)]="recipeOptions.servingStyle" interface="popover" placeholder="serving" ><ion-select-option *ngFor="let item of filterOptions(this.options, 'serving')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
+    The recipe must <ion-select [(ngModel)]="recipeOptions.directive" interface="popover" placeholder="requirement" ><ion-select-option *ngFor="let item of filterOptions(this.options,'directive')" [value]="item">{{item.name}}</ion-select-option></ion-select>
+    and accommodate <ion-select [multiple]="true" [(ngModel)]="recipeOptions.accommodations" interface="popover" placeholder="acommmodations" ><ion-select-option *ngFor="let item of filterOptions(this.options,'accommodations')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
+    </h3>
+  </ion-text>    
+  <video autoplay loop muted playsinline>
+    <source src="https://storage.googleapis.com/fffxmvp/images/5-ProductionScale.webm" type="video/webm">
+  </video>
+  </app-base-section>
+    
+    
+  <app-base-section [sectionID]="'preserve'" [disableButtonFunction]="shouldDisablePreservedButton" >
+  <ion-text section-body color="primary">
+    <h3>Perfect.<br><br>
+      <h3>
+      Using those food forest ingredients, let's generate a delicious recipe that can be paired with an alternative protein at a later date. Help fill out the following text to create your recipe:</h3><br><br>
+      I want to make a recipe that is <ion-select [(ngModel)]="recipeOptions.flavor" interface="popover" placeholder="flavour" ><ion-select-option *ngFor="let item of filterOptions(this.options,'flavor')" [value]="item">{{item.name}}</ion-select-option></ion-select>
+      and <ion-select [(ngModel)]="recipeOptions.texture" interface="popover" placeholder="texture" ><ion-select-option *ngFor="let item of filterOptions(this.options,'texture')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
+      The recipe should be for <ion-select [(ngModel)]="recipeOptions.skill" interface="popover" placeholder="chef" ><ion-select-option *ngFor="let item of filterOptions(this.options, 'skill')" [value]="item">{{item.name}}</ion-select-option></ion-select>
+      to make and can be eaten after <ion-select [(ngModel)]="recipeOptions.timeframe" interface="popover" placeholder="timeframe" ><ion-select-option *ngFor="let item of filterOptions(this.options,'timeframe')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
+      The recipe must accommodate <ion-select [multiple]="true" [(ngModel)]="recipeOptions.accommodations" interface="popover" placeholder="acommmodations" ><ion-select-option *ngFor="let item of filterOptions(this.options,'accommodations')" [value]="item">{{item.name}}</ion-select-option></ion-select>.
+    </h3>
+    </ion-text>
+    <video autoplay loop muted playsinline>
+      <source src="https://storage.googleapis.com/fffxmvp/images/5-ProductionScale.webm" type="video/webm">
+    </video>
+  </app-base-section>
+    
+  <!-- Surprise me path-->
+  <app-base-section [sectionID]="'surprise-me'" >
+    <ion-text section-body color="primary">
+      <h3>Fun!<br><br>
+      Using your food forest ingredients list, let's generate a delicious recipe for you to cook.</h3>
+  </ion-text>
+  <video autoplay loop muted playsinline>
+    <source src="https://storage.googleapis.com/fffxmvp/images/3-PlateScale.webm" type="video/webm">
+  </video>
 
-    </app-base-section>
+  </app-base-section>
+  
+  <app-base-section [sectionID]="'disclaimer'" >
+    <app-choice-section [sectionID]="'disclaimer'">
+    <ion-text section-body color="primary">       
+      <h3>DISCLAIMER<br><br>
+      This is a thinking and tinkering tool. The following recipe is a lucid hallucination generated by AI and cannot be held accountable for bad taste, being nutritionally deficient, or even poisonous. It is your responsibility to create a safe and delicious recipe in the kitchen.
+      <br><br>Do you want to proceed?<br></h3>
+    </ion-text>
+    </app-choice-section>
     
-    <app-base-section [sectionID]="'disclaimer'" >
-      <app-choice-section [sectionID]="'disclaimer'">
-      <ion-text section-body color="primary">       
-        <h3>DISCLAIMER<br><br>
-        This is a thinking and tinkering tool. The following recipe is a lucid hallucination generated by AI and cannot be held accountable for bad taste, being nutritionally deficient, or even poisonous. It is your responsibility to create a safe and delicious recipe in the kitchen.
-        <br><br>Do you want to proceed?<br></h3>
-     </ion-text>
-     </app-choice-section>
-     
-    </app-base-section>
+  </app-base-section>
     
-    <app-base-section [sectionID]="'no'">
-      <div section-body>
-        <ion-text color="primary">
-          <h3>Understandable.<br><br>
-          Have a great day!</h3>
-      </ion-text>
+  <app-base-section [sectionID]="'no'">
+    <div section-body>
+      <ion-text color="primary">
+        <h3>Understandable.<br><br>
+        Have a great day!</h3>
+    </ion-text>
+  </div>
+  </app-base-section>
+  
+  <app-base-section [showNextButton]="false" [sectionID]="'generate'" [showNextButton]="false" >
+    <ion-button section-body color="primary" (click)="generateRecipe()"><ion-text>Generate</ion-text></ion-button>
+  </app-base-section>
+  
+  <app-base-section [sectionID]="'recipe'">
+    <div section-body>
+      <ion-text color="primary" class="recipe-text">
+        <app-data-fetcher class="recipe" [styles]="{'font-size': '24px', 'white-space':'normal'}"></app-data-fetcher>
+    </ion-text>
+  </div>
+  </app-base-section>
+  
+  <app-base-section [sectionID]="'do-you-like'">
+    <app-choice-section [sectionID]="'do-you-like'">
+    <div section-body>
+      <ion-text color="primary">
+        <h3>Do you like this recipe?</h3>
+    </ion-text>
+  </div>
+  </app-choice-section>
+  </app-base-section>
+  
+  <app-base-section [sectionID]="'like'">
+    <app-choice-section [sectionID]="'like'">
+    <div section-body>
+      <ion-text color="primary">
+        <h3>Great!<br><br>
+        Should I send you the recipe?</h3>
+    </ion-text>
+  </div>
+  </app-choice-section>
+  </app-base-section>
+  
+  <app-base-section [sectionID]="'dislike'">
+    <app-choice-section [sectionID]="'dislike'">
+    <div section-body>
+      <ion-text color="primary">
+        <h3>That’s too bad!<br><br>
+        Should I send you the recipe anyway?</h3>
+    </ion-text>
     </div>
-    </app-base-section>
+  </app-choice-section>
+  </app-base-section>
     
-    <app-base-section [showNextButton]="false" [sectionID]="'generate'" [showNextButton]="false" >
-      <ion-button section-body color="primary" (click)="generateRecipe()"><ion-text>Generate</ion-text></ion-button>
-    </app-base-section>
-    
-    <app-base-section [sectionID]="'recipe'">
-      <div section-body>
-        <ion-text color="primary" class="recipe-text">
-         <app-data-fetcher class="recipe" [styles]="{'font-size': '24px', 'white-space':'normal'}"></app-data-fetcher>
-      </ion-text>
-    </div>
-    </app-base-section>
-    
-    <app-base-section [sectionID]="'do-you-like'">
-      <app-choice-section [sectionID]="'do-you-like'">
-      <div section-body>
-        <ion-text color="primary">
-          <h3>Do you like this recipe?</h3>
+  <app-base-section [sectionID]="'email'">
+    <div section-body>
+      <ion-text color="primary">
+        <h3>
+        <ion-input label="Email" placeholder="Enter email address"></ion-input>
+        <ion-button >Send</ion-button>
+        </h3>
+    </ion-text>
+  </div>
+  </app-base-section>
+  
+  <app-base-section [sectionID]="'startover'">
+    <app-choice-section [sectionID]="'startover'">
+    <div section-body>
+      <ion-text color="primary">
+        <h3>What would you like to do?</h3>
       </ion-text>
     </div>
     </app-choice-section>
-    </app-base-section>
-    
-    <app-base-section [sectionID]="'like'">
-      <app-choice-section [sectionID]="'like'">
-      <div section-body>
-        <ion-text color="primary">
-          <h3>Great!<br><br>
-          Should I send you the recipe?</h3>
-      </ion-text>
-    </div>
-    </app-choice-section>
-    </app-base-section>
-    
-    <app-base-section [sectionID]="'dislike'">
-      <app-choice-section [sectionID]="'dislike'">
-      <div section-body>
-        <ion-text color="primary">
-          <h3>That’s too bad!<br><br>
-          Should I send you the recipe anyway?</h3>
-      </ion-text>
-      </div>
-    </app-choice-section>
-    </app-base-section>
-    
-    <app-base-section [sectionID]="'email'">
-      <div section-body>
-        <ion-text color="primary">
-          <h3>
-          <ion-input label="Email" placeholder="Enter email address"></ion-input>
-          <ion-button >Send</ion-button>
-         </h3>
-      </ion-text>
-    </div>
-    </app-base-section>
-    
-    <app-base-section [sectionID]="'startover'">
-      <app-choice-section [sectionID]="'startover'">
-      <div section-body>
-        <ion-text color="primary">
-          <h3>What would you like to do?</h3>
-        </ion-text>
-      </div>
-      </app-choice-section>
-    </app-base-section>
-    
-    <app-base-section [sectionID]="'done'">
-      <div section-body>
-        <ion-text color="primary">
-          <h3>Done.</h3>
-      </ion-text>
-    </div>
-    </app-base-section>
+  </app-base-section>
+  
+  <app-base-section [sectionID]="'done'">
+    <div section-body>
+      <ion-text color="primary">
+        <h3>Done.</h3>
+    </ion-text>
+  </div>
+  </app-base-section>
     
     
 </ion-content>
