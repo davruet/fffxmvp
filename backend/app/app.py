@@ -14,8 +14,9 @@ from string import Template
 import traceback
 from pathlib import Path
 from gcloud import GCSService
-from image_gen import generateImage;
+from image_gen import generateImage
 from safe import walk_json
+import random
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly',
 		  'https://www.googleapis.com/auth/gmail.send']
@@ -122,6 +123,7 @@ def stringify_key(values, key):
 
 @app.route('/api/generate', methods=['POST'])
 def generate_text():
+	ensure_params_exists()
 	if not request.is_json:
 		return jsonify({"error": "Request must be JSON"}), 400
 	if not parameters:
@@ -167,6 +169,8 @@ def generate_text():
 		
 		# Generator for the response
 		def generate():
+			metadata = {"id":f"{id}"}
+			yield f"<script>{json.dumps(metadata)}</script>"
 			yield recipeSegments[0] # return the first part of the recipe
 			recipeChunks = []
 			for chunk in chat_completion: # stream the openai response
@@ -176,8 +180,8 @@ def generate_text():
 					yield content
 			print("Done with responses.")
 			yield recipeSegments[1]
-			# FIXME use a random image prompt
-			image_data = generateImage(client, parameters["IMAGE PROMPTS"][0]["Prompts"], "".join(recipeChunks))
+			
+			image_data = generateImage(client, random.choice(get_image_prompts(parameters))["Prompts"], "".join(recipeChunks))
 			image_name =  f"{id}.jpeg"
 			gcs_service.upload(image_data, app.config.get('bucket-name'), image_name,"image/jpeg")
 			print(f"Uploaded image {image_name}")
@@ -197,6 +201,10 @@ def get_parameters():
 	ensure_params_exists()
 			
 	return jsonify(parameters)
+	
+def get_image_prompts(params):
+	return [prompt for prompt in params["IMAGE PROMPTS"] if prompt["Prompts"] is not None]
+
 
 def save_and_pass(generator, uploader, filename):
 	# Accumulate content from the generator

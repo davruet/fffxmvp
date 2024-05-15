@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { DataService } from './data.service';
 
 @Component({
@@ -12,6 +12,9 @@ export class DataFetcherComponent implements OnInit {
   
   @Input() styles: any;
   
+  @Output() jsonExtracted = new EventEmitter<any>();
+
+  
   ngOnInit() {
     this.dataService.getGenerateRecipeTrigger().subscribe((json) => {
       this.dataStream = ''; // clear old recipe.
@@ -19,10 +22,29 @@ export class DataFetcherComponent implements OnInit {
 
       this.dataService.postRecipe(json).subscribe({
         next: partialHTML => {
-          this.dataStream += partialHTML;
+          this.handleIncomingData(partialHTML);
         },
         error: (error) => console.error('Error fetching data:', error),
       });
     });
+  }
+  
+  handleIncomingData(partialHTML: string) {
+    const scriptTagRegex = /<script[^>]*>([\s\S]*?)<\/script>/;
+    const match = scriptTagRegex.exec(partialHTML);
+    
+    if (match) {
+      try {
+        const jsonContent = match[1];
+        const parsedJson = JSON.parse(jsonContent);
+        this.jsonExtracted.emit(parsedJson);
+        // Remove the script tag from the partial HTML
+        partialHTML = partialHTML.replace(scriptTagRegex, '');
+      } catch (error) {
+        console.error('Error parsing JSON:', error);
+      }
+    }
+
+    this.dataStream += partialHTML;
   }
 }

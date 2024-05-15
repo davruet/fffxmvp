@@ -109,6 +109,9 @@ export class HomePage implements AfterViewInit, OnInit {
   
   recipeOptions: AllRecipeOptions = {type: "surprise-me", ingredients: this.ingredients, date: new Date()}
   
+  // Returned parameters for the generated recipe.
+  recipeJson: any;
+  
   
   initParameters(params: any){
     this.parameters = params;
@@ -278,6 +281,10 @@ generateRecipe(){
     return !mvp.culinaryStyle || !mvp.directive  || !mvp.servingStyle || !mvp.mvp;
   }
 
+  handleRecipeJson(json: any) {
+    console.log('Received JSON:', json);
+    this.recipeJson = json;
+  }
 
 
 
