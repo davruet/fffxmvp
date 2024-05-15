@@ -24,4 +24,4 @@ COPY nginx.conf /etc/nginx/nginx.conf
 EXPOSE 80
 
 # Run app.py when the container launches
-CMD service nginx start && gunicorn --workers 1 --timeout 120 --log-level=debug -b :5000 app:app
+CMD /app/run.sh
