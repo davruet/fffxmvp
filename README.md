@@ -37,6 +37,11 @@ Set the OpenAI API key env variable:
 
 `export OPENAI_API_KEY=YOUR KEY HERE`
 
+Set the gcloud credentials evn variable:
+
+`export SHEETS_SERVICE_ACCOUNT_CONFIG=$(cat /path/to/config_json_file.json)`
+
+
 In the backend folder, run:
 
 ```docker-compose up --build```
@@ -78,8 +83,8 @@ gcloud projects create fffxmvp
 `gcloud artifacts repositories create fffxmvp-repo --repository-format=docker  --description="fffxmvp repository" --location=europe-west1`
 
 ### Build image
-
-`cd backend && gcloud builds submit --region=europe-west1 --tag europe-west1-docker.pkg.dev/fffxmvp/fffxmvp-repo/fffxvmp:0.1`
+`ng build`
+`cd backend && gcloud builds submit --project fffxmvp --region=europe-west1 --tag europe-west1-docker.pkg.dev/fffxmvp/fffxmvp-repo/fffxvmp:0.5`
 
 ### Grant deploy permissions
 `backend/grantDeployPermissions.sh`
@@ -91,6 +96,9 @@ gcloud projects create fffxmvp
 `gcloud secrets create openai-api-key --replication-policy="automatic"`
 `echo YOUR_OPENAI_API_KEY_HERE |  gcloud secrets versions add openai-api-key --data-file=-`
 
+## Enable gmail API
+`gcloud services enable gmail.googleapis.com`
+
 Generate a service worker account and key by following these instructions, saving the key locally:
 https://support.google.com/a/answer/7378726?hl=en
 
@@ -99,7 +107,7 @@ https://support.google.com/a/answer/7378726?hl=en
 gcloud auth configure-docker europe-west1-docker.pkg.dev
 ```
 
-```
+``` 
 gcloud run services replace --region europe-west1 service.yaml
 ```
 

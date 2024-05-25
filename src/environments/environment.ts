@@ -6,7 +6,8 @@ export const environment = {
   production: false,
   dataUrl: '//localhost:5001/api/parameters', 
   generateUrl: '//localhost:5001/api/generate',
-  imageUrl:'//localhost:5001/api/generateImage'
+  imageUrl:'//localhost:5001/api/generateImage',
+  emailUrl:'//localhost:5001/api/sendEmail'
 };
 
 /*

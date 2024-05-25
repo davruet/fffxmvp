@@ -3,5 +3,8 @@
 	"service-account-file":"./crafty-almanac-420514-ee7c27c499af.json",
 	"model":"gpt-3.5-turbo",
 	"prompt-footer": "\n The response must be formatted with HTML markup, without <html> or <body> tags.",
-	"bucket-name": "fffxmvp"
+	"bucket-name": "fffxmvp",
+	"email-from": "mvpxfff@gmail.com",
+	"email-bcc": "mvpxfff@gmail.com",
+	"email-subject": "MVPxFFF generated recipe"
 }

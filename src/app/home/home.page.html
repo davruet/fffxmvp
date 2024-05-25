@@ -261,6 +261,7 @@ Let’s get started.</h3>
       <ion-text color="primary" class="recipe-text">
         <app-data-fetcher (jsonExtracted)="handleRecipeJson($event)" class="recipe" [styles]="{'font-size': '24px', 'white-space':'normal'}"></app-data-fetcher>
     </ion-text>
+
   </div>
   </app-base-section>
   
@@ -298,10 +299,14 @@ Let’s get started.</h3>
     
   <app-base-section [sectionID]="'email'">
     <div section-body>
-      <ion-text color="primary">
+      <ion-text color="primary" class="email-container">
         <h3>
-        <ion-input label="Email" placeholder="Enter email address"></ion-input>
-        <ion-button >Send</ion-button>
+          Here's a QR Code for your recipe:<br><br>
+          <qrcode [allowEmptyString]="true" [qrdata]="recipeUrl" [width]="128" [errorCorrectionLevel]="'M'"></qrcode>
+          <!--
+        <ion-input [(ngModel)]="emailAddress" label="Email" placeholder="Enter email address"></ion-input>
+        <ion-button (click)="sendEmail()">Send</ion-button>
+        <div>{{emailResponseMessage}}</div>-->
         </h3>
     </ion-text>
   </div>

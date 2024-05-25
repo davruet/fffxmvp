@@ -58,3 +58,11 @@ video {
   display: block;
   width: calc(100vw - 6rem);
 }
+.email-container {
+  display: flex;
+  align-items: center; /* Aligns the input and button vertically */
+}
+
+.email-container ion-button {
+  margin-left: 1rem; /* Adds some space between the input and the button */
+}

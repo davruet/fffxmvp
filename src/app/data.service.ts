@@ -47,4 +47,16 @@ private triggerGenerateRecipe = new Subject<string>();
           )
     );
   }
+  
+    /**
+   * Send an email with the provided address and recipe ID.
+   * @param address The email address to which the email will be sent.
+   * @param recipeId The ID of the recipe to include in the email.
+   * @returns Observable of the HTTP response.
+   */
+    sendEmail(address: string, recipeId: string): Observable<any> {
+      const url = environment.emailUrl;  // Update with your actual API endpoint
+      const body = { email: address, recipeId: recipeId };
+      return this.http.post(url, body);
+    }
 }

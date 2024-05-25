@@ -4,7 +4,7 @@ from google.oauth2.service_account import Credentials
 from google.cloud.exceptions import NotFound, Forbidden
 from flask_cors import CORS
 
-
+import logging
 import uuid
 import os
 import extract
@@ -16,6 +16,7 @@ from pathlib import Path
 from gcloud import GCSService
 from image_gen import generateImage
 from safe import walk_json
+from email_functions import send_message, create_message
 import random
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly',
@@ -169,7 +170,7 @@ def generate_text():
 		
 		# Generator for the response
 		def generate():
-			metadata = {"id":f"{id}"}
+			metadata = {"id":f"{id}", "recipeUrl":f"https://storage.googleapis.com/{ app.config.get('bucket-name')}/{id}.html"}
 			yield f"<script>{json.dumps(metadata)}</script>"
 			yield recipeSegments[0] # return the first part of the recipe
 			recipeChunks = []
@@ -201,6 +202,27 @@ def get_parameters():
 	ensure_params_exists()
 			
 	return jsonify(parameters)
+
+@app.route('/api/sendEmail', methods=['POST'])
+def send_email():
+	requestArg = request.get_json()
+	if not requestArg or 'email' not in requestArg or 'id' not in requestArg:
+		return jsonify({"error": "Missing data"}), 400
+
+	text = "TEST EMAIL"
+	address = "drueter@gmail.com"
+	try:
+		message = create_message(app.config.get("email-from"), address, app.config.get("email-subject"), text)
+		print(f"{app.config.get("email-from")}, {message}")
+		send_message(app.config.get("email-from"), message, credentials)
+		return jsonify({"response":"success"})
+	except Exception as e:
+        # Log the exception details
+		logging.error("Failed to send email: %s", str(e))
+		return jsonify({"error": "Email sending failed."}), 500
+
+
+
 	
 def get_image_prompts(params):
 	return [prompt for prompt in params["IMAGE PROMPTS"] if prompt["Prompts"] is not None]

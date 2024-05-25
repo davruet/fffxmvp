@@ -82,6 +82,13 @@ export class HomePage implements AfterViewInit, OnInit {
   
   options: RecipeOption[] = [];
   
+  emailAddress!: string;
+  
+  emailResponseMessage: String = "";
+  
+  recipeUrl!: string;
+
+  
   // register functions
   filterOptions = filterOptions;
   /*
@@ -284,6 +291,26 @@ generateRecipe(){
   handleRecipeJson(json: any) {
     console.log('Received JSON:', json);
     this.recipeJson = json;
+    this.recipeUrl = json.recipeUrl;
+  }
+  
+  sendEmail(){
+    this.dataService.sendEmail(this.emailAddress, this.recipeJson.id).subscribe({
+      complete: ()=> {
+        const emailSentMessage = 'Email sent successfully';
+        console.log(emailSentMessage);
+        this.showEmailResponseMessage(emailSentMessage);
+      },
+      error: (err)=> {
+        const errorResponse = 'Error sending email';
+        console.error(errorResponse, err);
+        this.showEmailResponseMessage(errorResponse);
+      }
+    });
+  }
+  
+  showEmailResponseMessage(message: String){
+    this.emailResponseMessage = message;
   }
 
 

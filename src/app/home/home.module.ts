@@ -6,6 +6,8 @@ import { HomePage } from './home.page';
 import { ItemListComponent } from '../item-list/item-list.component';
 import { ImageAccordionComponent } from '../image-accordion/image-accordion.component';
 import { HttpClientModule } from '@angular/common/http';
+import { QRCodeModule } from 'angularx-qrcode';
+
 
 
 import { HomePageRoutingModule } from './home-routing.module';
@@ -16,7 +18,6 @@ import { ImageGeneratorComponent } from '../image/image-generator.component';
 import { DataFetcherComponent } from '../data-fetcher.component';
 import { SimpleSegmentComponent } from '../components/simple-segment/simple-segment.component';
 
-
 @NgModule({
   imports: [
     CommonModule,
@@ -24,6 +25,7 @@ import { SimpleSegmentComponent } from '../components/simple-segment/simple-segm
     IonicModule,
     HomePageRoutingModule,
     HttpClientModule,
+    QRCodeModule
   ],
   declarations: [HomePage, ItemListComponent, ImageAccordionComponent, SectionComponent, ChoiceSectionComponent, ImageGeneratorComponent, DataFetcherComponent, SimpleSegmentComponent]
 })
