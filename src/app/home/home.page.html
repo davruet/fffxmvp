@@ -439,7 +439,7 @@ Let’s get started.</h3>
     <div section-body>
       <ion-text color="primary" class="email-container">
         <h3>
-          Here's a QR Code for your recipe:<br><br>
+          Here's a QR Code for <a target="_blank" href="{{recipeUrl}}">your recipe:</a><br><br>
           <qrcode [allowEmptyString]="true" [qrdata]="recipeUrl" [width]="128" [errorCorrectionLevel]="'M'"></qrcode>
           <!--
         <ion-input [(ngModel)]="emailAddress" label="Email" placeholder="Enter email address"></ion-input>
