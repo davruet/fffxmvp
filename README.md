@@ -46,14 +46,9 @@ In the backend folder, run:
 
 ```docker-compose up --build```
 
-To test the generate endpoint, you can post some JSON in this format:
-```
-curl -X POST http://localhost:8080/generate -H "Content-Type: application/json" -d '{"type":"surprise-me","ingredients":["test ingredient"], "mvp":"Test Protein","style":"test","serving":"test", "directive":"test"}' > test.html
-```
 
-## GCloud setup and deployment
-
-
+## GCloud Setup
+Execute these steps only once when creating a new site or updating a project.
 
 ### Login and create project
 `gcloud init`
@@ -82,10 +77,6 @@ gcloud projects create fffxmvp
 ### Create repo
 `gcloud artifacts repositories create fffxmvp-repo --repository-format=docker  --description="fffxmvp repository" --location=europe-west1`
 
-### Build image
-`ng build`
-`cd backend && gcloud builds submit --project fffxmvp --region=europe-west1 --tag europe-west1-docker.pkg.dev/fffxmvp/fffxmvp-repo/fffxvmp:0.5`
-
 ### Grant deploy permissions
 `backend/grantDeployPermissions.sh`
 
@@ -96,30 +87,14 @@ gcloud projects create fffxmvp
 `gcloud secrets create openai-api-key --replication-policy="automatic"`
 `echo YOUR_OPENAI_API_KEY_HERE |  gcloud secrets versions add openai-api-key --data-file=-`
 
-## Enable gmail API
-`gcloud services enable gmail.googleapis.com`
-
-Generate a service worker account and key by following these instructions, saving the key locally:
-https://support.google.com/a/answer/7378726?hl=en
-
-### Deploy
-```
-gcloud auth configure-docker europe-west1-docker.pkg.dev
-```
-
-``` 
-gcloud run services replace --region europe-west1 service.yaml
-```
-
-
-
+### Add secrets permissions
 ```
 gcloud secrets add-iam-policy-binding my-secret \
     --member="serviceAccount:your-cloud-run-service-account@your-project.iam.gserviceaccount.com" \
     --role="roles/secretmanager.secretAccessor"
 ```
 
-Create a bucket for file storage.
+### Create a bucket for file storage.
 ```
 gsutil mb -l EUROPE-WEST1 gs://fffxmvp/
 gsutil defacl set public-read gs://fffxmvp
@@ -131,9 +106,38 @@ gcloud projects add-iam-policy-binding YOUR_PROJECT_ID \
   --role='roles/storage.objectAdmin'
 ```
 
-
+### Add buckee permissions
 ```
 gcloud projects add-iam-policy-binding fffxmvp \
     --member="serviceAccount:mvpxfff@crafty-almanac-420514.iam.gserviceaccount.com" \
     --role="roles/storage.objectCreator"
 ```
+
+### Enable gmail API
+`gcloud services enable gmail.googleapis.com`
+
+Generate a service worker account and key by following these instructions, saving the key locally:
+https://support.google.com/a/answer/7378726?hl=en
+
+### Add configure docker permissions
+```
+gcloud auth configure-docker europe-west1-docker.pkg.dev
+```
+
+## Deploy
+
+Execute these steps to deploy your current version to the live site.
+
+### Build image
+In the base directory, run
+`ng build`
+to build the frontend.
+
+On successful frontend build, build the backend (replace the last $VERSION with the desired fffxmvp version, matching the version in the service.yaml file)
+`cd backend && gcloud builds submit --project fffxmvp --region=europe-west1 --tag europe-west1-docker.pkg.dev/fffxmvp/fffxmvp-repo/fffxvmp:$VERSION`
+
+### Replace the service definition
+`gcloud run services replace --region europe-west1 service.yaml`
+
+
+
