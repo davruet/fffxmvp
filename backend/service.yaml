@@ -20,7 +20,7 @@ spec:
         client.knative.dev/nonce: eksdsskemr
         run.googleapis.com/startupProbeType: Default
     spec:
-      containerConcurrency: 80
+      containerConcurrency: 1
       containers:
       - env:
         - name: OPENAI_API_KEY
@@ -33,7 +33,7 @@ spec:
             secretKeyRef:
               key: latest
               name: sheets-service-worker-key
-        image: europe-west1-docker.pkg.dev/fffxmvp/fffxmvp-repo/fffxvmp:0.1
+        image: europe-west1-docker.pkg.dev/fffxmvp/fffxmvp-repo/fffxvmp:0.6
         ports:
         - containerPort: 8080
           name: http1
