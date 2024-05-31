@@ -1,3 +1,6 @@
+"""Copyright(c) David Rueter All rights reserved. This program is made
+available under the terms of the AGPLv3 license. See the LICENSE file in the project root for more information. """
+
 def is_value_safe(value, safe_set):
     """Check if the value is in the safe params list."""
     return value in safe_set

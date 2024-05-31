@@ -1,3 +1,6 @@
+/* Copyright(c) David Rueter All rights reserved. This program is made available under the
+terms of the AGPLv3 license. See the LICENSE file in the project root for more information. */
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpDownloadProgressEvent, HttpEvent, HttpEventType } from '@angular/common/http';
 import { Observable, Subject } from 'rxjs';

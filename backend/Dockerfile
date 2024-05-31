@@ -1,3 +1,6 @@
+# Copyright(c) David Rueter All rights reserved. This program is made available under the
+# terms of the AGPLv3 license. See the LICENSE file in the project root for more information.
+
 # Use an official Python runtime as a parent image
 FROM python:3.12-slim
 

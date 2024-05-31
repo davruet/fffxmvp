@@ -1,3 +1,6 @@
+/* Copyright(c) David Rueter All rights reserved. This program is made available under the
+terms of the AGPLv3 license. See the LICENSE file in the project root for more information. */
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';

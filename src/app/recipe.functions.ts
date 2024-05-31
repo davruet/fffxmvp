@@ -1,3 +1,6 @@
+/* Copyright(c) David Rueter All rights reserved. This program is made available under the
+terms of the AGPLv3 license. See the LICENSE file in the project root for more information. */
+
 import {Ingredient, RecipeOption, FoodForest, AllRecipeOptions, SurpriseRecipe, FreshByProduct, FreshByTypology, PreservedRecipe} from './recipe.interfaces';
 
 export function filterOptions(options: RecipeOption[], type: string): RecipeOption[] {

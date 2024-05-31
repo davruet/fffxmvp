@@ -1,3 +1,5 @@
+""" Copyright(c) David Rueter All rights reserved. This program is made
+available under the terms of the AGPLv3 license. See the LICENSE file in the project root for more information. """
 from io import BytesIO
 from PIL import Image
 import base64

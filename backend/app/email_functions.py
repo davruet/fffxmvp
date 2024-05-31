@@ -1,3 +1,5 @@
+""" Copyright(c) David Rueter All rights reserved. This program is made
+available under the terms of the AGPLv3 license. See the LICENSE file in the project root for more information. """
 import base64
 import logging
 from googleapiclient.discovery import build

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#Copyright(c) David Rueter All rights reserved. This program is made
+#available under the terms of the AGPLv3 license. See the LICENSE file in the project root for more information.
+
 # Start Gunicorn
 gunicorn --workers 1 --timeout 120 --log-level=debug -b :5000 app:app &
 

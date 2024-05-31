@@ -1,3 +1,6 @@
+/* Copyright(c) David Rueter All rights reserved. This program is made available under the
+terms of the AGPLv3 license. See the LICENSE file in the project root for more information. */
+
 import { Component, ElementRef, EventEmitter, Output, Input, OnInit, Type, ChangeDetectorRef } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { SectionObserver } from './section-observer.interface';
