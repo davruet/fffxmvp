@@ -158,7 +158,8 @@ terms of the AGPLv3 license. See the LICENSE file in the project root for more i
 </ion-header>-->
 
 <div class="floating-menu">
-  <ion-menu-button></ion-menu-button>
+  <ion-menu-button id="menu-button"></ion-menu-button>
+  <div class="menu-detail">
   <br>
   <!--<div *ngIf="visibleSectionIndex >= 1">--> <!-- FIXME is this working? Probably broken with new state manager-->
   <div *ngIf="isSectionVisible('select-food-forest')"> 
@@ -218,6 +219,7 @@ terms of the AGPLv3 license. See the LICENSE file in the project root for more i
       <br>
       </div>
   <!--</div>-->
+</div>
 </div>
 
 <ion-content class="ion-padding" [fullscreen]="true" id="container">

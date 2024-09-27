@@ -16,6 +16,11 @@ terms of the AGPLv3 license. See the LICENSE file in the project root for more i
   line-height: 26px;
 }*/
 
+#menu-button{
+  position:fixed;
+  top:15px;
+  right:10px;
+}
 
 .floating-menu {
   position:fixed;
@@ -26,6 +31,18 @@ terms of the AGPLv3 license. See the LICENSE file in the project root for more i
   right:10px;
   background-color: #fffa;
   padding: 1rem;
+}
+
+/* Target iPhones specifically (including iPhone X and above with different screen sizes) */
+@media only screen and (max-width: 767px) and (-webkit-min-device-pixel-ratio: 2) {
+  /* Change the margin-right of .section */
+  .menu-detail {
+     display: none;
+  }
+  .floating-menu {
+    background-color: transparent;
+
+  }
 }
 
 .radio-wrapper {

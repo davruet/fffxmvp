@@ -44,8 +44,12 @@ Set the gcloud credentials evn variable:
 
 In the backend folder, run:
 
-```docker-compose up --build```
+```docker compose up --build```
 
+To test the generate endpoint, you can post so  me JSON in this format:
+```
+curl -X POST http://localhost:8080/generate -H "Content-Type: application/json" -d '{"type":"surprise-me","ingredients":["test ingredient"], "mvp":"Test Protein","style":"test","serving":"test", "directive":"test"}' > test.html
+```
 
 ## GCloud Setup
 Execute these steps only once when creating a new site or updating a project.
